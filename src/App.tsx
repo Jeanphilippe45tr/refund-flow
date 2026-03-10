@@ -1,12 +1,68 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ClientDashboard from "./pages/client/Dashboard";
+import WalletPage from "./pages/client/Wallet";
+import WithdrawPage from "./pages/client/Withdraw";
+import TransactionsPage from "./pages/client/Transactions";
+import ProfilePage from "./pages/client/Profile";
+import NotificationsPage from "./pages/client/Notifications";
+import SupportPage from "./pages/client/Support";
+import AdminDashboard from "./pages/admin/Dashboard";
+import UserManagement from "./pages/admin/UserManagement";
+import WithdrawalManagement from "./pages/admin/WithdrawalManagement";
+import RefundManagement from "./pages/admin/RefundManagement";
+import AdminSupport from "./pages/admin/AdminSupport";
+import Analytics from "./pages/admin/Analytics";
+import ActivityLog from "./pages/admin/ActivityLog";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: 'admin' | 'client' }) => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  if (role && user.role !== role) return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />;
+  return <>{children}</>;
+};
+
+const AppRoutes = () => {
+  const { user } = useAuth();
+  return (
+    <Routes>
+      <Route path="/" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Landing />} />
+      <Route path="/login" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Login />} />
+      <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
+
+      {/* Client */}
+      <Route path="/dashboard" element={<ProtectedRoute role="client"><ClientDashboard /></ProtectedRoute>} />
+      <Route path="/wallet" element={<ProtectedRoute role="client"><WalletPage /></ProtectedRoute>} />
+      <Route path="/withdraw" element={<ProtectedRoute role="client"><WithdrawPage /></ProtectedRoute>} />
+      <Route path="/transactions" element={<ProtectedRoute role="client"><TransactionsPage /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+      <Route path="/notifications" element={<ProtectedRoute role="client"><NotificationsPage /></ProtectedRoute>} />
+      <Route path="/support" element={<ProtectedRoute role="client"><SupportPage /></ProtectedRoute>} />
+
+      {/* Admin */}
+      <Route path="/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
+      <Route path="/admin/users" element={<ProtectedRoute role="admin"><UserManagement /></ProtectedRoute>} />
+      <Route path="/admin/withdrawals" element={<ProtectedRoute role="admin"><WithdrawalManagement /></ProtectedRoute>} />
+      <Route path="/admin/refunds" element={<ProtectedRoute role="admin"><RefundManagement /></ProtectedRoute>} />
+      <Route path="/admin/support" element={<ProtectedRoute role="admin"><AdminSupport /></ProtectedRoute>} />
+      <Route path="/admin/analytics" element={<ProtectedRoute role="admin"><Analytics /></ProtectedRoute>} />
+      <Route path="/admin/logs" element={<ProtectedRoute role="admin"><ActivityLog /></ProtectedRoute>} />
+      <Route path="/admin/notifications" element={<ProtectedRoute role="admin"><NotificationsPage /></ProtectedRoute>} />
+
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -14,11 +70,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
