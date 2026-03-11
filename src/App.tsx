@@ -4,7 +4,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import Landing from "./pages/Landing";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Services from "./pages/Services";
+import Contact from "./pages/Contact";
+import FAQ from "./pages/FAQ";
+import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
+import RefundPolicyPage from "./pages/legal/RefundPolicyPage";
+import TermsOfService from "./pages/legal/TermsOfService";
+import CookiePolicy from "./pages/legal/CookiePolicy";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ClientDashboard from "./pages/client/Dashboard";
@@ -36,7 +44,15 @@ const AppRoutes = () => {
   const { user } = useAuth();
   return (
     <Routes>
-      <Route path="/" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Landing />} />
+      <Route path="/" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/refund-policy" element={<RefundPolicyPage />} />
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/cookies" element={<CookiePolicy />} />
       <Route path="/login" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Login />} />
       <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
 
