@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import aboutTeam from '@/assets/about-team.jpg';
 import { Zap, Shield, Users, Award, Target, Heart, Clock, ArrowRight } from 'lucide-react';
 
 const team = [

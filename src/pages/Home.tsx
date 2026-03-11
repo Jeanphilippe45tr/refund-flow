@@ -71,6 +71,9 @@ const Home = () => (
             <Button size="lg" variant="outline" className="h-12 px-8 text-base">Learn More</Button>
           </Link>
         </div>
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="mt-12">
+          <img src={heroIllustration} alt="RefundPay platform illustration" className="max-w-2xl mx-auto w-full" />
+        </motion.div>
       </motion.div>
     </section>
 
