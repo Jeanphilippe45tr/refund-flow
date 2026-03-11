@@ -95,6 +95,9 @@ const About = () => (
     {/* Team */}
     <section className="px-6 md:px-12 py-20 bg-card border-y border-border">
       <div className="max-w-6xl mx-auto">
+        <div className="mb-12">
+          <img src={aboutTeam} alt="Our team at work" className="w-full rounded-2xl object-cover max-h-80 mb-8" />
+        </div>
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Meet Our Team</h2>
           <p className="text-muted-foreground text-lg">The people behind RefundPay</p>
