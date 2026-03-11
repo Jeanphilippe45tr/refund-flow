@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Shield, Zap, RefreshCw, CreditCard, Star, CheckCircle, Users, TrendingUp, ChevronDown } from 'lucide-react';
+import heroIllustration from '@/assets/hero-illustration.png';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const stats = [
