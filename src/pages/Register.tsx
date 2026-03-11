@@ -16,19 +16,16 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      const success = register(name, email, password);
-      setLoading(false);
-      if (success) {
-        toast.success('Account created successfully!');
-        navigate('/dashboard');
-      } else {
-        toast.error('Email already exists');
-      }
-    }, 800);
+    const success = await register(name, email, password);
+    setLoading(false);
+    if (success) {
+      toast.success('Account created successfully!');
+    } else {
+      toast.error('Email already exists or registration failed');
+    }
   };
 
   return (
@@ -38,9 +35,9 @@ const Register = () => {
           <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
             <Zap className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold">RefundPay</span>
+          <span className="text-xl font-bold text-foreground">RefundPay</span>
         </div>
-        <h1 className="text-3xl font-bold mb-2">Create account</h1>
+        <h1 className="text-3xl font-bold mb-2 text-foreground">Create account</h1>
         <p className="text-muted-foreground mb-8">Get started with your refund management</p>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>

@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { motion } from 'framer-motion';
 import { Zap, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
+import loginHero from '@/assets/login-hero.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,22 +17,16 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      const success = login(email, password);
-      setLoading(false);
-      if (success) {
-        toast.success('Welcome back!');
-        // Navigate based on role
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const u = users.find((u: any) => u.email === email);
-        navigate(u?.role === 'admin' ? '/admin' : '/dashboard');
-      } else {
-        toast.error('Invalid credentials or account suspended');
-      }
-    }, 800);
+    const success = await login(email, password);
+    setLoading(false);
+    if (success) {
+      toast.success('Welcome back!');
+    } else {
+      toast.error('Invalid credentials or account suspended');
+    }
   };
 
   return (
@@ -46,7 +41,7 @@ const Login = () => {
           ))}
         </div>
         <div className="text-center text-primary-foreground z-10 px-12">
-          <Zap className="w-16 h-16 mx-auto mb-6" />
+          <img src={loginHero} alt="Secure login" className="w-64 h-64 mx-auto mb-6 object-contain" />
           <h2 className="text-4xl font-bold mb-4">RefundPay</h2>
           <p className="text-lg opacity-90">Your trusted platform for seamless refund management</p>
         </div>
@@ -59,7 +54,7 @@ const Login = () => {
             </div>
             <span className="text-xl font-bold">RefundPay</span>
           </div>
-          <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
+          <h1 className="text-3xl font-bold mb-2 text-foreground">Welcome back</h1>
           <p className="text-muted-foreground mb-8">Sign in to your account to continue</p>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>

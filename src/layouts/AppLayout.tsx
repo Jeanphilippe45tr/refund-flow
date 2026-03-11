@@ -5,17 +5,32 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Bell, Moon, Sun } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 export const AppLayout = ({ children }: { children: ReactNode }) => {
-  const { user, notifications, darkMode, toggleDarkMode } = useAuth();
-  const unread = notifications.filter(n => n.userId === user?.id && !n.read).length;
+  const { user, darkMode, toggleDarkMode } = useAuth();
+
+  const { data: unreadCount = 0 } = useQuery({
+    queryKey: ['unread-notifications', user?.id],
+    queryFn: async () => {
+      if (!user) return 0;
+      const { count } = await supabase
+        .from('notifications')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('read', false);
+      return count || 0;
+    },
+    enabled: !!user,
+  });
 
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-16 flex items-center justify-between border-b bg-card px-4 sticky top-0 z-30">
+          <header className="h-16 flex items-center justify-between border-b border-border bg-card px-4 sticky top-0 z-30">
             <div className="flex items-center gap-2">
               <SidebarTrigger />
               <span className="text-sm text-muted-foreground hidden sm:block">
@@ -28,9 +43,9 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
               </button>
               <Link to={user?.role === 'admin' ? '/admin/notifications' : '/notifications'} className="p-2 rounded-lg hover:bg-muted transition-colors relative">
                 <Bell className="w-5 h-5" />
-                {unread > 0 && (
+                {unreadCount > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs gradient-primary border-0 text-primary-foreground">
-                    {unread}
+                    {unreadCount}
                   </Badge>
                 )}
               </Link>
