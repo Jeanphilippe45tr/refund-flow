@@ -22,20 +22,7 @@ CREATE POLICY "Admins can update documents" ON public.document_verifications FOR
 
 CREATE TRIGGER update_document_verifications_updated_at BEFORE UPDATE ON public.document_verifications FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- OTP codes table
-CREATE TABLE public.otp_codes (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL,
-  email text NOT NULL,
-  code text NOT NULL,
-  expires_at timestamptz NOT NULL,
-  used boolean NOT NULL DEFAULT false,
-  created_at timestamptz NOT NULL DEFAULT now()
-);
 
-ALTER TABLE public.otp_codes ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can verify own OTP" ON public.otp_codes FOR SELECT USING (auth.uid() = user_id);
 
 -- Storage bucket for documents
 INSERT INTO storage.buckets (id, name, public) VALUES ('documents', 'documents', false);
