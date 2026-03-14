@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Wallet, ArrowDownCircle, History, User, LifeBuoy, Bell,
-  Users, CreditCard, RefreshCw, BarChart3, Shield, LogOut, Zap,
+  Users, CreditCard, RefreshCw, BarChart3, Shield, LogOut, Zap, FileCheck, FileText,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation } from 'react-router-dom';
@@ -14,6 +14,7 @@ const clientItems = [
   { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
   { title: 'Wallet', url: '/wallet', icon: Wallet },
   { title: 'Withdraw', url: '/withdraw', icon: ArrowDownCircle },
+  { title: 'Documents', url: '/documents', icon: FileText },
   { title: 'Transactions', url: '/transactions', icon: History },
   { title: 'Notifications', url: '/notifications', icon: Bell },
   { title: 'Support', url: '/support', icon: LifeBuoy },
@@ -25,6 +26,7 @@ const adminItems = [
   { title: 'Users', url: '/admin/users', icon: Users },
   { title: 'Withdrawals', url: '/admin/withdrawals', icon: CreditCard },
   { title: 'Refunds', url: '/admin/refunds', icon: RefreshCw },
+  { title: 'Documents', url: '/admin/documents', icon: FileCheck },
   { title: 'Support Tickets', url: '/admin/support', icon: LifeBuoy },
   { title: 'Analytics', url: '/admin/analytics', icon: BarChart3 },
   { title: 'Activity Log', url: '/admin/logs', icon: Shield },
