@@ -1,0 +1,10 @@
+<parameter name="content"># Remove Lovable Tagger
+
+## Steps
+1. [ ] Remove lovable-tagger from package.json  
+2. [ ] Update vite.config.ts to remove componentTagger plugin
+3. [ ] Clean lockfiles and reinstall dependencies  
+4. [ ] Verify dev server runs without lovable icons
+5. [ ] Update playwright configs if needed
+
+Current: Starting edits...</parameter>

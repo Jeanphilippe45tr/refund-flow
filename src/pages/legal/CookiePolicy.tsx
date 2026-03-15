@@ -20,7 +20,7 @@ const CookiePolicy = () => (
         <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
           <Zap className="w-5 h-5 text-primary-foreground" />
         </div>
-        <span className="text-xl font-bold text-foreground">RefundPay</span>
+        <span className="text-xl font-bold text-foreground">RefundPayPro</span>
       </Link>
       <div className="flex items-center gap-3">
         <Link to="/login"><Button variant="ghost">Sign In</Button></Link>
@@ -48,7 +48,7 @@ const CookiePolicy = () => (
         <Link to="/refund-policy" className="hover:text-foreground transition-colors">Refund Policy</Link>
         <Link to="/cookies" className="text-foreground">Cookies</Link>
       </div>
-      © {new Date().getFullYear()} RefundPay. All rights reserved.
+      © {new Date().getFullYear()} RefundPayPro. All rights reserved.
     </footer>
   </div>
 );

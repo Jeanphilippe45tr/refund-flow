@@ -12,7 +12,7 @@ const team = [
 ];
 
 const milestones = [
-  { year: '2020', event: 'RefundPay founded with a mission to simplify refunds.' },
+  { year: '2020', event: 'RefundPayPro founded with a mission to simplify refunds.' },
   { year: '2021', event: 'Reached 10,000 users and processed $5M in refunds.' },
   { year: '2022', event: 'Expanded to 40+ countries with multi-currency support.' },
   { year: '2023', event: 'Launched advanced fraud detection and crypto withdrawals.' },
@@ -26,7 +26,7 @@ const About = () => (
         <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
           <Zap className="w-5 h-5 text-primary-foreground" />
         </div>
-        <span className="text-xl font-bold text-foreground">RefundPay</span>
+        <span className="text-xl font-bold text-foreground">RefundPayPro</span>
       </Link>
       <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
         <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
@@ -44,7 +44,7 @@ const About = () => (
     {/* Hero */}
     <section className="px-6 md:px-12 py-20 max-w-6xl mx-auto text-center">
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-foreground">About <span className="text-gradient">RefundPay</span></h1>
+        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-foreground">About <span className="text-gradient">RefundPayPro</span></h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
           We're on a mission to make refunds effortless, transparent, and accessible for everyone across the globe.
         </p>
@@ -100,7 +100,7 @@ const About = () => (
         </div>
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Meet Our Team</h2>
-          <p className="text-muted-foreground text-lg">The people behind RefundPay</p>
+          <p className="text-muted-foreground text-lg">The people behind RefundPayPro</p>
         </div>
         <div className="grid md:grid-cols-4 gap-6">
           {team.map((m, i) => (
@@ -142,7 +142,7 @@ const About = () => (
         <Link to="/refund-policy" className="hover:text-foreground transition-colors">Refund Policy</Link>
         <Link to="/cookies" className="hover:text-foreground transition-colors">Cookies</Link>
       </div>
-      © {new Date().getFullYear()} RefundPay. All rights reserved.
+      © {new Date().getFullYear()} RefundPayPro. All rights reserved.
     </footer>
   </div>
 );

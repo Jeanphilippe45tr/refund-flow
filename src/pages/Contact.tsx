@@ -23,7 +23,7 @@ const Contact = () => {
           <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
             <Zap className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-foreground">RefundPay</span>
+          <span className="text-xl font-bold text-foreground">RefundPayPro</span>
         </Link>
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
           <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
@@ -52,7 +52,7 @@ const Contact = () => {
           {/* Contact Info */}
           <div className="space-y-6">
             {[
-              { icon: Mail, title: 'Email Us', detail: 'support@refundpay.com', sub: 'We respond within 24 hours' },
+              { icon: Mail, title: 'Email Us', detail: 'support@RefundPayPro.com', sub: 'We respond within 24 hours' },
               { icon: Phone, title: 'Call Us', detail: '+1 (800) 555-0199', sub: 'Mon-Fri 9AM - 6PM EST' },
               { icon: MessageCircle, title: 'Live Chat', detail: 'Available 24/7', sub: 'Average response: 2 minutes' },
               { icon: MapPin, title: 'Office', detail: '123 Finance Street', sub: 'New York, NY 10001' },
@@ -106,7 +106,7 @@ const Contact = () => {
           <Link to="/refund-policy" className="hover:text-foreground transition-colors">Refund Policy</Link>
           <Link to="/cookies" className="hover:text-foreground transition-colors">Cookies</Link>
         </div>
-        © {new Date().getFullYear()} RefundPay. All rights reserved.
+        © {new Date().getFullYear()} RefundPayPro. All rights reserved.
       </footer>
     </div>
   );

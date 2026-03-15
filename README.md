@@ -1,73 +1,219 @@
-# Welcome to your Lovable project
+# RefundPay - Complete Refund Management Platform 🚀
 
-## Project info
+## English / Français
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+### 🎯 **Overview**
+**RefundPay** is a full-stack web application for refund processing and management. Built with modern technologies, it offers **client and admin dashboards** for seamless refund workflows.
 
-## How can I edit this code?
+**Key Features:**
+- ✅ **Dual Dashboard**: Client (refunds, wallet, withdraw, documents) & Admin (users, refunds, withdrawals, analytics)
+- ✅ **Supabase Integration**: Auth, PostgreSQL, Storage (documents/profiles)
+- ✅ **Modern UI**: shadcn/ui + TailwindCSS + Framer Motion
+- ✅ **Responsive**: Mobile-first design
+- ✅ **Real-time**: React Query for data fetching
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### 🛠 **Tech Stack**
+```
+Frontend: React 18 + TypeScript + Vite + shadcn/ui + TailwindCSS
+Backend: Supabase (Auth, DB, Edge Functions, Storage)
+Database: PostgreSQL (profiles, refunds, transactions, etc.)
+Deployment: Vercel/Netlify (front) + Supabase (back)
+Testing: Vitest + Playwright
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 🚀 **Quick Start**
 
-**Use GitHub Codespaces**
+1. **Clone & Install**
+```bash
+git clone <repo>
+cd refund-flow
+npm install
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+2. **Supabase Setup**
+```bash
+npm install -g supabase
+supabase init
+supabase start
+```
+- Copy `.env` vars from `supabase/.env` to `.env.local`
+- Run migrations: `supabase db reset`
 
-## What technologies are used for this project?
+3. **Run Development**
+```bash
+npm run dev
+```
+Open http://localhost:5173
 
-This project is built with:
+4. **Build & Deploy**
+```bash
+npm run build
+npm run preview
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+### 👥 **User Roles & Features**
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+#### **Client Dashboard** (`/dashboard`)
+| Feature | Description |
+|---------|-------------|
+| Dashboard | Overview stats |
+| Wallet | Balance, transactions |
+| Withdraw | Request withdrawals |
+| Documents | Upload/verify receipts |
+| Profile | Settings (photo, phone, password, email) |
+| Notifications | Alerts |
+| Support | Tickets |
 
-## Can I connect a custom domain to my Lovable project?
+#### **Admin Dashboard** (`/admin`)
+| Feature | Description |
+|---------|-------------|
+| Dashboard | Analytics |
+| Users | Manage users/roles |
+| Withdrawals | Approve/reject |
+| Refunds | Process refunds |
+| Documents | Review uploads |
+| Support | Manage tickets |
+| Logs | Activity log |
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### 🔐 **Authentication**
+- Email/Password login
+- Role-based access (client/admin)
+- Profile photo upload (10MB max)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+### 📱 **Screenshots**
+*(Add screenshots: login, client dashboard, admin, profile settings)*
+
+---
+
+### ⚙️ **Supabase Dashboard**
+1. Storage: 'documents' bucket (policies pre-set)
+2. Auth: Enable Email
+3. Database: Tables auto-migrated
+4. Edge Functions: Optional (admin creation)
+
+---
+
+### 💰 **Customization**
+- Colors: Tailwind config
+- Features: Add Stripe/PayPal for payments
+- White-label: Change branding
+
+---
+
+### 🐛 **Issues & Support**
+Contact: [your-email]
+License: Commercial Ready
+
+---
+
+# RefundPay - Plateforme Complète de Gestion de Remboursements 🚀
+
+## Français
+
+### 🎯 **Présentation**
+**RefundPay** est une application web full-stack pour le traitement et la gestion de remboursements. Conçue avec les technologies modernes, elle propose des **tableaux de bord client et admin** pour des workflows fluides.
+
+**Fonctionnalités Principales:**
+- ✅ **Double Tableau de Bord**: Client (remboursements, wallet, retraits, documents) & Admin (utilisateurs, remboursements, retraits, analytics)
+- ✅ **Intégration Supabase**: Auth, PostgreSQL, Stockage (documents/profils)
+- ✅ **UI Moderne**: shadcn/ui + TailwindCSS + Framer Motion
+- ✅ **Responsive**: Design mobile-first
+- ✅ **Temps Réel**: React Query pour récupération de données
+
+### 🛠 **Stack Technique**
+```
+Frontend: React 18 + TypeScript + Vite + shadcn/ui + TailwindCSS
+Backend: Supabase (Auth, DB, Edge Functions, Storage)
+Base de Données: PostgreSQL (profiles, refunds, transactions...)
+Déploiement: Vercel/Netlify (front) + Supabase (back)
+Tests: Vitest + Playwright
+```
+
+### 🚀 **Démarrage Rapide**
+
+1. **Cloner & Installer**
+```bash
+git clone <repo>
+cd refund-flow
+npm install
+```
+
+2. **Supabase**
+```bash
+npm install -g supabase
+supabase init
+supabase start
+```
+- Copier `.env` de `supabase/.env` vers `.env.local`
+- Migrations: `supabase db reset`
+
+3. **Développement**
+```bash
+npm run dev
+```
+Ouvrir http://localhost:5173
+
+4. **Build & Déployer**
+```bash
+npm run build
+npm run preview
+```
+
+### 👥 **Rôles & Fonctionnalités**
+
+#### **Tableau de Bord Client** (`/dashboard`)
+| Fonctionnalité | Description |
+|----------------|-------------|
+| Dashboard | Stats d'aperçu |
+| Wallet | Solde, transactions |
+| Retrait | Demander retraits |
+| Documents | Upload/vérifier reçus |
+| Profil | Paramètres (photo, téléphone, mot de passe, email) |
+| Notifications | Alertes |
+| Support | Tickets |
+
+#### **Tableau de Bord Admin** (`/admin`)
+| Fonctionnalité | Description |
+|----------------|-------------|
+| Dashboard | Analytics |
+| Utilisateurs | Gérer rôles |
+| Retraits | Approuver/rejeter |
+| Remboursements | Traiter |
+| Documents | Vérifier uploads |
+| Support | Gérer tickets |
+| Logs | Historique |
+
+### 🔐 **Authentification**
+- Connexion email/mot de passe
+- Accès par rôle (client/admin)
+- Upload photo profil (10MB max)
+
+### 📱 **Captures d'écran**
+*(Ajouter screenshots: login, dashboard client, admin, paramètres profil)*
+
+### ⚙️ **Supabase**
+1. Storage: bucket 'documents' (politiques pré-set)
+2. Auth: Activer Email
+3. Database: Tables auto-migrées
+4. Edge Functions: Optionnel
+
+### 💰 **Personnalisation**
+- Couleurs: config Tailwind
+- Fonctionnalités: Ajouter Stripe/PayPal
+- White-label: Changer branding
+
+### 🐛 **Support**
+Contact: [votre-email]
+Licence: Prêt Commercial
+
+**Ready to Deploy & Sell! 💎**

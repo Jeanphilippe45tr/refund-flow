@@ -41,7 +41,7 @@ const Login = () => {
         </div>
         <div className="text-center text-primary-foreground z-10 px-12">
           <img src={loginHero} alt="Secure login" className="w-64 h-64 mx-auto mb-6 object-contain" />
-          <h2 className="text-4xl font-bold mb-4">RefundPay</h2>
+          <h2 className="text-4xl font-bold mb-4">RefundPayPro</h2>
           <p className="text-lg opacity-90">
             Your trusted platform for seamless refund management
           </p>
@@ -49,12 +49,10 @@ const Login = () => {
       </div>
       <div className="flex-1 flex items-center justify-center p-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-          <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-              <Zap className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold">RefundPay</span>
-          </div>
+<Link to="/" className="flex items-center gap-2 mb-8 lg:hidden hover:opacity-80 transition-opacity">
+          <img src="/RefunPayPro-logo.png" alt="RefundPayPro Home" className="h-8 w-auto" />
+            <span className="text-xl font-bold">RefundPayPro</span>
+            </Link>
           <h1 className="text-3xl font-bold mb-2 text-foreground">Welcome back</h1>
           <p className="text-muted-foreground mb-8">Sign in to your account to continue</p>
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -77,6 +75,9 @@ const Login = () => {
           </form>
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Don't have an account? <Link to="/register" className="text-primary font-semibold hover:underline">Create one</Link>
+          </p>
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+             <Link to="/" className="text-primary font-semibold hover:underline">Back to home page</Link>
           </p>
         </motion.div>
       </div>

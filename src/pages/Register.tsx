@@ -32,10 +32,8 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center p-6 bg-background">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         <div className="flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-            <Zap className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold text-foreground">RefundPay</span>
+          <img src="/RefunPayPro-logo.png" alt="RefundPayPro" className="h-8 w-auto" />
+          <span className="text-xl font-bold text-foreground">RefundPayPro</span>
         </div>
         <h1 className="text-3xl font-bold mb-2 text-foreground">Create account</h1>
         <p className="text-muted-foreground mb-8">Get started with your refund management</p>
@@ -59,6 +57,9 @@ const Register = () => {
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account? <Link to="/login" className="text-primary font-semibold hover:underline">Sign in</Link>
         </p>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+             <Link to="/" className="text-primary font-semibold hover:underline">Back to home page</Link>
+          </p>
       </motion.div>
     </div>
   );

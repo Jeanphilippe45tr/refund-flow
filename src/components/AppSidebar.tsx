@@ -45,10 +45,8 @@ export function AppSidebar() {
       <SidebarContent className="pt-4">
         <div className={`px-4 mb-6 ${collapsed ? 'px-2' : ''}`}>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-              <Zap className="w-5 h-5 text-primary-foreground" />
-            </div>
-            {!collapsed && <span className="text-lg font-bold text-sidebar-primary-foreground">RefundPay</span>}
+            <img src="/RefunPayPro-logo.png" alt="RefundPayPro" className="h-8 w-auto" />
+            {!collapsed && <span className="text-lg font-bold text-sidebar-primary-foreground">RefundPayPro</span>}
           </div>
         </div>
         <SidebarGroup>

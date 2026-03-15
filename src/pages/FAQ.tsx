@@ -48,7 +48,7 @@ const FAQ = () => (
         <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
           <Zap className="w-5 h-5 text-primary-foreground" />
         </div>
-        <span className="text-xl font-bold text-foreground">RefundPay</span>
+        <span className="text-xl font-bold text-foreground">RefundPayPro</span>
       </Link>
       <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
         <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
@@ -101,7 +101,7 @@ const FAQ = () => (
         <Link to="/refund-policy" className="hover:text-foreground transition-colors">Refund Policy</Link>
         <Link to="/cookies" className="hover:text-foreground transition-colors">Cookies</Link>
       </div>
-      © {new Date().getFullYear()} RefundPay. All rights reserved.
+      © {new Date().getFullYear()} RefundPayPro. All rights reserved.
     </footer>
   </div>
 );

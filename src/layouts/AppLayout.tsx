@@ -32,6 +32,9 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-16 flex items-center justify-between border-b border-border bg-card px-4 sticky top-0 z-30">
             <div className="flex items-center gap-2">
+              <Link to="/" className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted">
+                <img src="/RefunPayPro-logo.png" alt="RefundPayPro Home" className="h-8 w-auto" />
+              </Link>
               <SidebarTrigger />
               <span className="text-sm text-muted-foreground hidden sm:block">
                 Welcome back, <span className="font-semibold text-foreground">{user?.name}</span>

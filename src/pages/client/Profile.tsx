@@ -83,8 +83,9 @@ const ProfilePage = () => {
     try {
       // Upload to documents bucket (existing)
       const fileExt = file.name.split('.').pop();
-      const fileName = `profile-${user.id}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
+      const timestamp = Date.now();
+      const fileName = `photo-${timestamp}.${fileExt || 'jpg'}`;
+      const filePath = `profile/${user.id}/${fileName}`;
       
       const { error: uploadError } = await supabase.storage
         .from('documents')
@@ -97,9 +98,14 @@ const ProfilePage = () => {
         .from('documents')
         .getPublicUrl(filePath);
 
+      // Ensure signed URL if private
+      const { data: signedUrl } = await supabase.storage
+        .from('documents')
+        .createSignedUrl(filePath, 3600);
+
       // Update profile
       await updateProfile({ profilePhoto: publicUrl });
-      setProfilePhotoPreview(publicUrl);
+      setProfilePhotoPreview(signedUrl || publicUrl);
       toast.success('Profile photo updated!');
     } catch (error) {
       console.error('Upload error:', error);
@@ -192,6 +198,10 @@ const ProfilePage = () => {
                             src={profilePhotoPreview || '/placeholder.svg'} 
                             alt="Profile" 
                             className="w-24 h-24 rounded-full object-cover border-4 border-background shadow-lg"
+                            onError={(e) => {
+                              console.log('Image load error:', profilePhotoPreview);
+                              e.currentTarget.src = '/placeholder.svg';
+                            }}
                           />
                           <label className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-2 rounded-full cursor-pointer hover:bg-primary/90 transition-colors">
                             <Camera className="w-5 h-5" />

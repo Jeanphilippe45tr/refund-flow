@@ -13,8 +13,8 @@ const stats = [
 ];
 
 const testimonials = [
-  { name: 'Sarah Johnson', role: 'E-commerce Owner', text: 'RefundPay processed my refund in under 24 hours. The transparency is unmatched.', rating: 5 },
-  { name: 'Michael Chen', role: 'Freelancer', text: 'I\'ve been using RefundPay for 2 years. Their withdrawal system is fast and reliable.', rating: 5 },
+  { name: 'Sarah Johnson', role: 'E-commerce Owner', text: 'RefundPayPro processed my refund in under 24 hours. The transparency is unmatched.', rating: 5 },
+  { name: 'Michael Chen', role: 'Freelancer', text: 'I\'ve been using RefundPayPro for 2 years. Their withdrawal system is fast and reliable.', rating: 5 },
   { name: 'Amira Osei', role: 'Digital Marketer', text: 'The best refund platform I\'ve ever used. Support team is incredibly helpful.', rating: 5 },
 ];
 
@@ -29,11 +29,11 @@ const Home = () => (
     {/* Nav */}
     <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-border bg-card/80 backdrop-blur-lg sticky top-0 z-50">
       <Link to="/" className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-          <Zap className="w-5 h-5 text-primary-foreground" />
-        </div>
-        <span className="text-xl font-bold text-foreground">RefundPay</span>
-      </Link>
+        <img src="/RefunPayPro-logo.png" alt="RefundPayPro" className="h-8 w-auto" />
+        <Link to="/" className="ml-2">
+         <span className="text-xl font-bold text-foreground">RefundPayPro</span>
+        </Link>
+       </Link>
       <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
         <Link to="/" className="text-foreground">Home</Link>
         <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
@@ -59,7 +59,7 @@ const Home = () => (
           <span className="text-gradient">Fast & Secure</span>
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          RefundPay helps you recover funds from online purchases, subscriptions, and payment disputes with a seamless, transparent process.
+          RefundPayPro helps you recover funds from online purchases, subscriptions, and payment disputes with a seamless, transparent process.
         </p>
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <Link to="/register">
@@ -72,7 +72,7 @@ const Home = () => (
           </Link>
         </div>
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="mt-12">
-          <img src={heroIllustration} alt="RefundPay platform illustration" className="max-w-2xl mx-auto w-full" />
+          <img src={heroIllustration} alt="RefundPayPro platform illustration" className="max-w-2xl mx-auto w-full" />
         </motion.div>
       </motion.div>
     </section>
@@ -119,7 +119,7 @@ const Home = () => (
     <section className="px-6 md:px-12 py-20 bg-card border-y border-border">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Why Choose RefundPay</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Why Choose RefundPayPro</h2>
           <p className="text-muted-foreground text-lg">Powerful tools for managing your refund operations</p>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
@@ -192,7 +192,7 @@ const Home = () => (
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
         className="gradient-primary rounded-3xl p-12 md:p-16">
         <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">Ready to Get Your Refund?</h2>
-        <p className="text-primary-foreground/80 text-lg mb-8 max-w-xl mx-auto">Join thousands of users who trust RefundPay to recover their funds quickly and securely.</p>
+        <p className="text-primary-foreground/80 text-lg mb-8 max-w-xl mx-auto">Join thousands of users who trust RefundPayPro to recover their funds quickly and securely.</p>
         <Link to="/register">
           <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 h-12 px-8 text-base font-semibold">
             Get Started Free <ArrowRight className="ml-2 w-4 h-4" />
@@ -206,11 +206,11 @@ const Home = () => (
       <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-8">
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-              <Zap className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold text-foreground">RefundPay</span>
-          </div>
+            <img src="/RefunPayPro-logo.png" alt="RefundPayPro" className="h-8 w-auto" />
+            <Link to="/" className="ml-2">
+             <span className="text-xl font-bold text-foreground">RefundPayPro</span>
+            </Link>
+           </div>
           <p className="text-sm text-muted-foreground">The modern platform for managing refunds and withdrawals with complete transparency.</p>
         </div>
         <div>
@@ -239,7 +239,7 @@ const Home = () => (
         </div>
       </div>
       <div className="max-w-6xl mx-auto mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-        © {new Date().getFullYear()} RefundPay. All rights reserved.
+        © {new Date().getFullYear()} RefundPayPro. All rights reserved.
       </div>
     </footer>
   </div>

@@ -9,10 +9,10 @@ const Landing = () => {
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b bg-card/80 backdrop-blur-lg sticky top-0 z-50">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-            <Zap className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold">RefundPay</span>
+<img src="/RefunPayPro-logo.png" alt="RefundPayPro" className="h-8 w-auto" />
+          <Link to="/" className="ml-2">
+          <span className="text-xl font-bold">RefundPayPro</span>
+          </Link>
         </div>
         <div className="flex items-center gap-3">
           <Link to="/login"><Button variant="ghost">Sign In</Button></Link>
@@ -80,7 +80,7 @@ const Landing = () => {
 
       {/* Footer */}
       <footer className="border-t py-8 px-6 md:px-12 text-center text-sm text-muted-foreground">
-        © 2024 RefundPay. All rights reserved.
+        © 2024 RefundPayPro. All rights reserved.
       </footer>
     </div>
   );
