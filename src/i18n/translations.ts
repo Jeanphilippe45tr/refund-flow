@@ -1,0 +1,475 @@
+export type Language = 'en' | 'fr';
+
+const translations: Record<Language, Record<string, string>> = {
+  en: {
+    // Nav
+    'nav.home': 'Home',
+    'nav.about': 'About',
+    'nav.services': 'Services',
+    'nav.faq': 'FAQ',
+    'nav.contact': 'Contact',
+    'nav.signIn': 'Sign In',
+    'nav.getStarted': 'Get Started',
+
+    // Home hero
+    'home.trusted': 'Trusted by 50,000+ clients worldwide',
+    'home.heroTitle1': 'Get Your Money Back',
+    'home.heroTitle2': 'Fast & Secure',
+    'home.heroDesc': 'RefundPayPro helps you recover funds from online purchases, subscriptions, and payment disputes with a seamless, transparent process.',
+    'home.requestRefund': 'Request Refund',
+    'home.learnMore': 'Learn More',
+
+    // Home how it works
+    'home.howItWorks': 'How Refunds Work',
+    'home.howItWorksDesc': 'Three simple steps to get your money back',
+    'home.step01': 'Submit Request',
+    'home.step01Desc': 'Fill in your refund details and select your preferred withdrawal method.',
+    'home.step02': 'Admin Review',
+    'home.step02Desc': 'Our team reviews your request and verifies the transaction within 24 hours.',
+    'home.step03': 'Receive Funds',
+    'home.step03Desc': 'Once approved, funds are sent to your chosen payment method instantly.',
+
+    // Home stats
+    'home.refundsProcessed': 'Refunds Processed',
+    'home.successRate': 'Success Rate',
+    'home.happyClients': 'Happy Clients',
+    'home.countriesServed': 'Countries Served',
+
+    // Home features
+    'home.whyChoose': 'Why Choose RefundPayPro',
+    'home.whyChooseDesc': 'Powerful tools for managing your refund operations',
+    'home.instantRefunds': 'Instant Refunds',
+    'home.instantRefundsDesc': 'Process refunds in seconds with automated workflows and real-time tracking.',
+    'home.flexibleWithdrawals': 'Flexible Withdrawals',
+    'home.flexibleWithdrawalsDesc': 'Support for bank, PayPal, Mobile Money, and crypto withdrawals.',
+    'home.fraudProtection': 'Fraud Protection',
+    'home.fraudProtectionDesc': 'Advanced security with activity monitoring and suspicious transaction flagging.',
+
+    // Home testimonials
+    'home.testimonials': 'What Our Clients Say',
+    'home.testimonialsDesc': 'Trusted by thousands of satisfied users',
+
+    // Home FAQ
+    'home.faqTitle': 'Frequently Asked Questions',
+    'home.faqDesc': 'Quick answers to common questions',
+    'home.viewAllFaqs': 'View All FAQs',
+    'home.faq1Q': 'How long does a refund take?',
+    'home.faq1A': 'Most refunds are processed within 1-3 business days depending on the payment method.',
+    'home.faq2Q': 'What payment methods are supported?',
+    'home.faq2A': 'We support Bank Transfer, Mobile Money, PayPal, and Crypto Wallet withdrawals.',
+    'home.faq3Q': 'Is my data secure?',
+    'home.faq3A': 'Yes. We use industry-standard encryption and security measures to protect all user data.',
+
+    // Home CTA
+    'home.ctaTitle': 'Ready to Get Your Refund?',
+    'home.ctaDesc': 'Join thousands of users who trust RefundPayPro to recover their funds quickly and securely.',
+    'home.getStartedFree': 'Get Started Free',
+
+    // Footer
+    'footer.desc': 'The modern platform for managing refunds and withdrawals with complete transparency.',
+    'footer.company': 'Company',
+    'footer.aboutUs': 'About Us',
+    'footer.support': 'Support',
+    'footer.helpCenter': 'Help Center',
+    'footer.legal': 'Legal',
+    'footer.privacy': 'Privacy Policy',
+    'footer.refundPolicy': 'Refund Policy',
+    'footer.terms': 'Terms of Service',
+    'footer.cookies': 'Cookie Policy',
+    'footer.rights': 'All rights reserved.',
+
+    // About
+    'about.title': 'About',
+    'about.desc': "We're on a mission to make refunds effortless, transparent, and accessible for everyone across the globe.",
+    'about.mission': 'Our Mission',
+    'about.missionDesc': 'To provide a seamless, secure, and fast refund experience for individuals and businesses worldwide.',
+    'about.values': 'Our Values',
+    'about.valuesDesc': 'Transparency, trust, and user-first design guide every decision we make.',
+    'about.promise': 'Our Promise',
+    'about.promiseDesc': 'We commit to processing every legitimate refund with speed and integrity.',
+    'about.whyTrust': 'Why Trust Us',
+    'about.meetTeam': 'Meet Our Team',
+    'about.meetTeamDesc': 'The people behind RefundPayPro',
+    'about.ourJourney': 'Our Journey',
+    'about.supportAvailable': 'Support Available',
+    'about.countries': 'Countries',
+
+    // Services
+    'services.title': 'Our',
+    'services.titleHighlight': 'Services',
+    'services.desc': 'We handle all types of refund claims so you can focus on what matters most.',
+    'services.ctaTitle': 'Need Help With a Refund?',
+    'services.ctaDesc': 'Our team is ready to assist you with any refund claim. Get started in minutes.',
+    'services.onlinePurchase': 'Online Purchase Refunds',
+    'services.onlinePurchaseDesc': "Get refunds for products that were never delivered, arrived damaged, or didn't match the description.",
+    'services.subscription': 'Subscription Refunds',
+    'services.subscriptionDesc': "Recover charges from unwanted subscriptions, auto-renewals, or services that didn't meet expectations.",
+    'services.paymentDispute': 'Payment Dispute Assistance',
+    'services.paymentDisputeDesc': 'We help you navigate chargebacks and payment disputes with merchants and payment processors.',
+    'services.digitalProduct': 'Digital Product Refunds',
+    'services.digitalProductDesc': "Recover funds from digital purchases like software, courses, or digital services that didn't deliver value.",
+
+    // Contact
+    'contact.title': 'Get In',
+    'contact.titleHighlight': 'Touch',
+    'contact.desc': "Have a question or need help? We're here for you 24/7.",
+    'contact.emailUs': 'Email Us',
+    'contact.emailResponse': 'We respond within 24 hours',
+    'contact.callUs': 'Call Us',
+    'contact.callHours': 'Mon-Fri 9AM - 6PM EST',
+    'contact.liveChat': 'Live Chat',
+    'contact.liveChatAvail': 'Available 24/7',
+    'contact.liveChatResponse': 'Average response: 2 minutes',
+    'contact.office': 'Office',
+    'contact.sendMessage': 'Send us a Message',
+    'contact.yourName': 'Your Name',
+    'contact.yourEmail': 'Your Email',
+    'contact.subject': 'Subject',
+    'contact.yourMessage': 'Your message...',
+    'contact.send': 'Send Message',
+    'contact.messageSent': 'Message sent! We\'ll get back to you within 24 hours.',
+
+    // FAQ page
+    'faq.title': 'Frequently Asked',
+    'faq.titleHighlight': 'Questions',
+    'faq.desc': 'Find answers to common questions about our refund services.',
+    'faq.stillQuestions': 'Still have questions?',
+    'faq.supportAvail': 'Our support team is available 24/7 to help you.',
+    'faq.contactSupport': 'Contact Support',
+    'faq.refundProcess': 'Refund Process',
+    'faq.requiredDocs': 'Required Documents',
+    'faq.paymentMethods': 'Payment Methods',
+    'faq.accountSecurity': 'Account & Security',
+
+    // Login
+    'login.welcomeBack': 'Welcome back',
+    'login.signInDesc': 'Sign in to your account to continue',
+    'login.email': 'Email',
+    'login.password': 'Password',
+    'login.signingIn': 'Signing in...',
+    'login.signIn': 'Sign In',
+    'login.noAccount': "Don't have an account?",
+    'login.createOne': 'Create one',
+    'login.backHome': 'Back to home page',
+    'login.platformDesc': 'Your trusted platform for seamless refund management',
+
+    // Register
+    'register.createAccount': 'Create account',
+    'register.getStarted': 'Get started with your refund management',
+    'register.fullName': 'Full Name',
+    'register.creating': 'Creating account...',
+    'register.create': 'Create Account',
+    'register.hasAccount': 'Already have an account?',
+    'register.signIn': 'Sign in',
+
+    // Dashboard (client)
+    'dashboard.title': 'Dashboard',
+    'dashboard.overview': 'Overview of your account activity',
+    'dashboard.balance': 'Balance',
+    'dashboard.pendingWithdrawals': 'Pending Withdrawals',
+    'dashboard.totalRefunded': 'Total Refunded',
+    'dashboard.transactions': 'Transactions',
+    'dashboard.activityOverview': 'Activity Overview',
+    'dashboard.recentTransactions': 'Recent Transactions',
+    'dashboard.noTransactions': 'No transactions yet',
+
+    // Wallet
+    'wallet.title': 'Wallet',
+    'wallet.availableBalance': 'Available Balance',
+    'wallet.totalIn': 'Total In',
+    'wallet.totalOut': 'Total Out',
+    'wallet.timeline': 'Transaction Timeline',
+
+    // Withdraw
+    'withdraw.title': 'Withdrawals',
+    'withdraw.manage': 'Manage your withdrawal requests',
+    'withdraw.new': 'New Withdrawal',
+    'withdraw.requestTitle': 'Request Withdrawal',
+    'withdraw.accountHolder': 'Account Holder Name',
+    'withdraw.paymentMethod': 'Payment Method',
+    'withdraw.selectMethod': 'Select method',
+    'withdraw.country': 'Country',
+    'withdraw.amount': 'Amount',
+    'withdraw.balance': 'Balance',
+    'withdraw.message': 'Message (optional)',
+    'withdraw.submit': 'Submit Request',
+    'withdraw.supportedMethods': 'Supported Payment Methods',
+    'withdraw.noWithdrawals': 'No withdrawals yet',
+    'withdraw.cancel': 'Cancel',
+    'withdraw.submitted': 'Withdrawal request submitted!',
+    'withdraw.failed': 'Failed to submit',
+    'withdraw.cancelled': 'Withdrawal cancelled',
+    'withdraw.invalidAmount': 'Invalid amount or insufficient balance',
+
+    // Sidebar
+    'sidebar.administration': 'Administration',
+    'sidebar.menu': 'Menu',
+    'sidebar.logout': 'Logout',
+    'sidebar.dashboard': 'Dashboard',
+    'sidebar.wallet': 'Wallet',
+    'sidebar.withdraw': 'Withdraw',
+    'sidebar.documents': 'Documents',
+    'sidebar.transactions': 'Transactions',
+    'sidebar.notifications': 'Notifications',
+    'sidebar.support': 'Support',
+    'sidebar.profile': 'Profile',
+    'sidebar.users': 'Users',
+    'sidebar.withdrawals': 'Withdrawals',
+    'sidebar.refunds': 'Refunds',
+    'sidebar.supportTickets': 'Support Tickets',
+    'sidebar.analytics': 'Analytics',
+    'sidebar.activityLog': 'Activity Log',
+
+    // AppLayout
+    'header.welcomeBack': 'Welcome back,',
+
+    // Table headers
+    'table.amount': 'Amount',
+    'table.method': 'Method',
+    'table.status': 'Status',
+    'table.date': 'Date',
+    'table.actions': 'Actions',
+
+    // Testimonials (keep names in English)
+    'testimonial1': 'RefundPayPro processed my refund in under 24 hours. The transparency is unmatched.',
+    'testimonial2': "I've been using RefundPayPro for 2 years. Their withdrawal system is fast and reliable.",
+    'testimonial3': "The best refund platform I've ever used. Support team is incredibly helpful.",
+  },
+
+  fr: {
+    // Nav
+    'nav.home': 'Accueil',
+    'nav.about': 'À propos',
+    'nav.services': 'Services',
+    'nav.faq': 'FAQ',
+    'nav.contact': 'Contact',
+    'nav.signIn': 'Connexion',
+    'nav.getStarted': 'Commencer',
+
+    // Home hero
+    'home.trusted': 'Approuvé par plus de 50 000 clients dans le monde',
+    'home.heroTitle1': 'Récupérez Votre Argent',
+    'home.heroTitle2': 'Rapide & Sécurisé',
+    'home.heroDesc': 'RefundPayPro vous aide à récupérer vos fonds suite à des achats en ligne, des abonnements et des litiges de paiement avec un processus transparent.',
+    'home.requestRefund': 'Demander un Remboursement',
+    'home.learnMore': 'En savoir plus',
+
+    // Home how it works
+    'home.howItWorks': 'Comment fonctionnent les remboursements',
+    'home.howItWorksDesc': 'Trois étapes simples pour récupérer votre argent',
+    'home.step01': 'Soumettre la demande',
+    'home.step01Desc': 'Remplissez les détails de votre remboursement et sélectionnez votre méthode de retrait préférée.',
+    'home.step02': 'Examen par l\'admin',
+    'home.step02Desc': 'Notre équipe examine votre demande et vérifie la transaction dans les 24 heures.',
+    'home.step03': 'Recevoir les fonds',
+    'home.step03Desc': 'Une fois approuvé, les fonds sont envoyés à votre méthode de paiement choisie instantanément.',
+
+    // Home stats
+    'home.refundsProcessed': 'Remboursements traités',
+    'home.successRate': 'Taux de réussite',
+    'home.happyClients': 'Clients satisfaits',
+    'home.countriesServed': 'Pays desservis',
+
+    // Home features
+    'home.whyChoose': 'Pourquoi choisir RefundPayPro',
+    'home.whyChooseDesc': 'Des outils puissants pour gérer vos opérations de remboursement',
+    'home.instantRefunds': 'Remboursements instantanés',
+    'home.instantRefundsDesc': 'Traitez les remboursements en quelques secondes avec des flux automatisés et un suivi en temps réel.',
+    'home.flexibleWithdrawals': 'Retraits flexibles',
+    'home.flexibleWithdrawalsDesc': 'Prise en charge des retraits bancaires, PayPal, Mobile Money et crypto.',
+    'home.fraudProtection': 'Protection contre la fraude',
+    'home.fraudProtectionDesc': 'Sécurité avancée avec surveillance des activités et signalement des transactions suspectes.',
+
+    // Home testimonials
+    'home.testimonials': 'Ce que disent nos clients',
+    'home.testimonialsDesc': 'Approuvé par des milliers d\'utilisateurs satisfaits',
+
+    // Home FAQ
+    'home.faqTitle': 'Questions fréquemment posées',
+    'home.faqDesc': 'Réponses rapides aux questions courantes',
+    'home.viewAllFaqs': 'Voir toutes les FAQ',
+    'home.faq1Q': 'Combien de temps prend un remboursement ?',
+    'home.faq1A': 'La plupart des remboursements sont traités dans un délai de 1 à 3 jours ouvrables selon la méthode de paiement.',
+    'home.faq2Q': 'Quelles méthodes de paiement sont acceptées ?',
+    'home.faq2A': 'Nous prenons en charge les virements bancaires, Mobile Money, PayPal et les retraits par portefeuille crypto.',
+    'home.faq3Q': 'Mes données sont-elles sécurisées ?',
+    'home.faq3A': 'Oui. Nous utilisons un chiffrement aux normes de l\'industrie et des mesures de sécurité pour protéger toutes les données utilisateur.',
+
+    // Home CTA
+    'home.ctaTitle': 'Prêt à obtenir votre remboursement ?',
+    'home.ctaDesc': 'Rejoignez des milliers d\'utilisateurs qui font confiance à RefundPayPro pour récupérer leurs fonds rapidement et en toute sécurité.',
+    'home.getStartedFree': 'Commencer gratuitement',
+
+    // Footer
+    'footer.desc': 'La plateforme moderne pour gérer les remboursements et les retraits en toute transparence.',
+    'footer.company': 'Entreprise',
+    'footer.aboutUs': 'À propos',
+    'footer.support': 'Assistance',
+    'footer.helpCenter': 'Centre d\'aide',
+    'footer.legal': 'Juridique',
+    'footer.privacy': 'Politique de confidentialité',
+    'footer.refundPolicy': 'Politique de remboursement',
+    'footer.terms': 'Conditions d\'utilisation',
+    'footer.cookies': 'Politique de cookies',
+    'footer.rights': 'Tous droits réservés.',
+
+    // About
+    'about.title': 'À propos de',
+    'about.desc': 'Nous avons pour mission de rendre les remboursements simples, transparents et accessibles à tous dans le monde entier.',
+    'about.mission': 'Notre Mission',
+    'about.missionDesc': 'Offrir une expérience de remboursement fluide, sécurisée et rapide pour les particuliers et les entreprises du monde entier.',
+    'about.values': 'Nos Valeurs',
+    'about.valuesDesc': 'La transparence, la confiance et le design centré utilisateur guident chacune de nos décisions.',
+    'about.promise': 'Notre Promesse',
+    'about.promiseDesc': 'Nous nous engageons à traiter chaque remboursement légitime avec rapidité et intégrité.',
+    'about.whyTrust': 'Pourquoi nous faire confiance',
+    'about.meetTeam': 'Rencontrez notre équipe',
+    'about.meetTeamDesc': 'Les personnes derrière RefundPayPro',
+    'about.ourJourney': 'Notre parcours',
+    'about.supportAvailable': 'Assistance disponible',
+    'about.countries': 'Pays',
+
+    // Services
+    'services.title': 'Nos',
+    'services.titleHighlight': 'Services',
+    'services.desc': 'Nous gérons tous les types de demandes de remboursement pour que vous puissiez vous concentrer sur ce qui compte le plus.',
+    'services.ctaTitle': 'Besoin d\'aide pour un remboursement ?',
+    'services.ctaDesc': 'Notre équipe est prête à vous aider pour toute demande de remboursement. Commencez en quelques minutes.',
+    'services.onlinePurchase': 'Remboursements d\'achats en ligne',
+    'services.onlinePurchaseDesc': 'Obtenez des remboursements pour des produits jamais livrés, arrivés endommagés ou ne correspondant pas à la description.',
+    'services.subscription': 'Remboursements d\'abonnements',
+    'services.subscriptionDesc': 'Récupérez les frais d\'abonnements non souhaités, de renouvellements automatiques ou de services décevants.',
+    'services.paymentDispute': 'Assistance aux litiges de paiement',
+    'services.paymentDisputeDesc': 'Nous vous aidons à naviguer dans les rétrofacturations et les litiges de paiement avec les marchands.',
+    'services.digitalProduct': 'Remboursements de produits numériques',
+    'services.digitalProductDesc': 'Récupérez vos fonds pour des achats numériques comme les logiciels, les cours ou les services numériques.',
+
+    // Contact
+    'contact.title': 'Contactez',
+    'contact.titleHighlight': 'Nous',
+    'contact.desc': 'Vous avez une question ou besoin d\'aide ? Nous sommes là pour vous 24h/24 et 7j/7.',
+    'contact.emailUs': 'Envoyez-nous un email',
+    'contact.emailResponse': 'Nous répondons sous 24 heures',
+    'contact.callUs': 'Appelez-nous',
+    'contact.callHours': 'Lun-Ven 9h - 18h EST',
+    'contact.liveChat': 'Chat en direct',
+    'contact.liveChatAvail': 'Disponible 24h/24',
+    'contact.liveChatResponse': 'Réponse moyenne : 2 minutes',
+    'contact.office': 'Bureau',
+    'contact.sendMessage': 'Envoyez-nous un message',
+    'contact.yourName': 'Votre nom',
+    'contact.yourEmail': 'Votre email',
+    'contact.subject': 'Sujet',
+    'contact.yourMessage': 'Votre message...',
+    'contact.send': 'Envoyer le message',
+    'contact.messageSent': 'Message envoyé ! Nous vous répondrons sous 24 heures.',
+
+    // FAQ page
+    'faq.title': 'Questions',
+    'faq.titleHighlight': 'Fréquentes',
+    'faq.desc': 'Trouvez des réponses aux questions courantes sur nos services de remboursement.',
+    'faq.stillQuestions': 'Vous avez encore des questions ?',
+    'faq.supportAvail': 'Notre équipe d\'assistance est disponible 24h/24 pour vous aider.',
+    'faq.contactSupport': 'Contacter le support',
+    'faq.refundProcess': 'Processus de remboursement',
+    'faq.requiredDocs': 'Documents requis',
+    'faq.paymentMethods': 'Méthodes de paiement',
+    'faq.accountSecurity': 'Compte & Sécurité',
+
+    // Login
+    'login.welcomeBack': 'Bon retour',
+    'login.signInDesc': 'Connectez-vous à votre compte pour continuer',
+    'login.email': 'Email',
+    'login.password': 'Mot de passe',
+    'login.signingIn': 'Connexion en cours...',
+    'login.signIn': 'Se connecter',
+    'login.noAccount': 'Vous n\'avez pas de compte ?',
+    'login.createOne': 'Créer un compte',
+    'login.backHome': 'Retour à l\'accueil',
+    'login.platformDesc': 'Votre plateforme de confiance pour une gestion fluide des remboursements',
+
+    // Register
+    'register.createAccount': 'Créer un compte',
+    'register.getStarted': 'Commencez à gérer vos remboursements',
+    'register.fullName': 'Nom complet',
+    'register.creating': 'Création du compte...',
+    'register.create': 'Créer le compte',
+    'register.hasAccount': 'Vous avez déjà un compte ?',
+    'register.signIn': 'Se connecter',
+
+    // Dashboard (client)
+    'dashboard.title': 'Tableau de bord',
+    'dashboard.overview': 'Aperçu de l\'activité de votre compte',
+    'dashboard.balance': 'Solde',
+    'dashboard.pendingWithdrawals': 'Retraits en attente',
+    'dashboard.totalRefunded': 'Total remboursé',
+    'dashboard.transactions': 'Transactions',
+    'dashboard.activityOverview': 'Aperçu de l\'activité',
+    'dashboard.recentTransactions': 'Transactions récentes',
+    'dashboard.noTransactions': 'Aucune transaction pour le moment',
+
+    // Wallet
+    'wallet.title': 'Portefeuille',
+    'wallet.availableBalance': 'Solde disponible',
+    'wallet.totalIn': 'Total entrant',
+    'wallet.totalOut': 'Total sortant',
+    'wallet.timeline': 'Historique des transactions',
+
+    // Withdraw
+    'withdraw.title': 'Retraits',
+    'withdraw.manage': 'Gérez vos demandes de retrait',
+    'withdraw.new': 'Nouveau retrait',
+    'withdraw.requestTitle': 'Demande de retrait',
+    'withdraw.accountHolder': 'Nom du titulaire du compte',
+    'withdraw.paymentMethod': 'Méthode de paiement',
+    'withdraw.selectMethod': 'Sélectionner la méthode',
+    'withdraw.country': 'Pays',
+    'withdraw.amount': 'Montant',
+    'withdraw.balance': 'Solde',
+    'withdraw.message': 'Message (facultatif)',
+    'withdraw.submit': 'Soumettre la demande',
+    'withdraw.supportedMethods': 'Méthodes de paiement acceptées',
+    'withdraw.noWithdrawals': 'Aucun retrait pour le moment',
+    'withdraw.cancel': 'Annuler',
+    'withdraw.submitted': 'Demande de retrait soumise !',
+    'withdraw.failed': 'Échec de la soumission',
+    'withdraw.cancelled': 'Retrait annulé',
+    'withdraw.invalidAmount': 'Montant invalide ou solde insuffisant',
+
+    // Sidebar
+    'sidebar.administration': 'Administration',
+    'sidebar.menu': 'Menu',
+    'sidebar.logout': 'Déconnexion',
+    'sidebar.dashboard': 'Tableau de bord',
+    'sidebar.wallet': 'Portefeuille',
+    'sidebar.withdraw': 'Retrait',
+    'sidebar.documents': 'Documents',
+    'sidebar.transactions': 'Transactions',
+    'sidebar.notifications': 'Notifications',
+    'sidebar.support': 'Assistance',
+    'sidebar.profile': 'Profil',
+    'sidebar.users': 'Utilisateurs',
+    'sidebar.withdrawals': 'Retraits',
+    'sidebar.refunds': 'Remboursements',
+    'sidebar.supportTickets': 'Tickets d\'assistance',
+    'sidebar.analytics': 'Analytique',
+    'sidebar.activityLog': 'Journal d\'activité',
+
+    // AppLayout
+    'header.welcomeBack': 'Bienvenue,',
+
+    // Table headers
+    'table.amount': 'Montant',
+    'table.method': 'Méthode',
+    'table.status': 'Statut',
+    'table.date': 'Date',
+    'table.actions': 'Actions',
+
+    // Testimonials
+    'testimonial1': 'RefundPayPro a traité mon remboursement en moins de 24 heures. La transparence est inégalée.',
+    'testimonial2': 'J\'utilise RefundPayPro depuis 2 ans. Leur système de retrait est rapide et fiable.',
+    'testimonial3': 'La meilleure plateforme de remboursement que j\'ai jamais utilisée. L\'équipe d\'assistance est incroyablement utile.',
+  },
+};
+
+export default translations;
