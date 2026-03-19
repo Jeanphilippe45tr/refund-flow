@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Zap, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { LanguageCurrencyToggle } from '@/components/LanguageCurrencyToggle';
+import { PublicHeader } from '@/components/PublicHeader';
 
 const FAQ = () => {
   const { t } = useLanguage();
@@ -48,26 +48,7 @@ const FAQ = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-border bg-card/80 backdrop-blur-lg sticky top-0 z-50">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-            <Zap className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold text-foreground">RefundPayPro</span>
-        </Link>
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-          <Link to="/" className="hover:text-foreground transition-colors">{t('nav.home')}</Link>
-          <Link to="/about" className="hover:text-foreground transition-colors">{t('nav.about')}</Link>
-          <Link to="/services" className="hover:text-foreground transition-colors">{t('nav.services')}</Link>
-          <Link to="/faq" className="text-foreground">{t('nav.faq')}</Link>
-          <Link to="/contact" className="hover:text-foreground transition-colors">{t('nav.contact')}</Link>
-        </div>
-        <div className="flex items-center gap-2">
-          <LanguageCurrencyToggle />
-          <Link to="/login"><Button variant="ghost">{t('nav.signIn')}</Button></Link>
-          <Link to="/register"><Button className="gradient-primary border-0 text-primary-foreground">{t('nav.getStarted')}</Button></Link>
-        </div>
-      </nav>
+      <PublicHeader />
 
       <section className="px-6 md:px-12 py-20 max-w-4xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>

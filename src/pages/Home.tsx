@@ -5,7 +5,7 @@ import { ArrowRight, Shield, Zap, RefreshCw, CreditCard, Star, CheckCircle, User
 import heroIllustration from '@/assets/hero-illustration.png';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { LanguageCurrencyToggle } from '@/components/LanguageCurrencyToggle';
+import { PublicHeader } from '@/components/PublicHeader';
 
 const Home = () => {
   const { t } = useLanguage();
@@ -31,25 +31,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-border bg-card/80 backdrop-blur-lg sticky top-0 z-50">
-        <Link to="/" className="flex items-center gap-2">
-          <img src="/RefunPayPro-logo.png" alt="RefundPayPro" className="h-8 w-auto" />
-          <span className="text-xl font-bold text-foreground">RefundPayPro</span>
-        </Link>
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-          <Link to="/" className="text-foreground">{t('nav.home')}</Link>
-          <Link to="/about" className="hover:text-foreground transition-colors">{t('nav.about')}</Link>
-          <Link to="/services" className="hover:text-foreground transition-colors">{t('nav.services')}</Link>
-          <Link to="/faq" className="hover:text-foreground transition-colors">{t('nav.faq')}</Link>
-          <Link to="/contact" className="hover:text-foreground transition-colors">{t('nav.contact')}</Link>
-        </div>
-        <div className="flex items-center gap-2">
-          <LanguageCurrencyToggle />
-          <Link to="/login"><Button variant="ghost">{t('nav.signIn')}</Button></Link>
-          <Link to="/register"><Button className="gradient-primary border-0 text-primary-foreground">{t('nav.getStarted')}</Button></Link>
-        </div>
-      </nav>
+      <PublicHeader />
 
       {/* Hero */}
       <section className="px-6 md:px-12 py-20 md:py-32 max-w-6xl mx-auto text-center">

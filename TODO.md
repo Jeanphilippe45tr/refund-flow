@@ -1,10 +1,16 @@
-# Add Logo to Home Page - TODOs
+# Responsive Header Toggle Task
 
 ## Steps:
-- [x] Step 1: Update navigation logo in src/pages/Home.tsx
-- [x] Step 2: Update footer logo in src/pages/Home.tsx  
-- [x] Step 3: Update navigation logo in src/pages/Landing.tsx (optional consistency)
-- [ ] Step 4: Update footer logo in src/pages/Landing.tsx (optional consistency, skipped - no logo icon in simple footer)
-- [x] Step 5: Verify changes and complete task
+1. [x] Update src/layouts/AppLayout.tsx: Fixed imports (dropdown-menu separate from badge), removed invalid `position="menu"` prop on LanguageCurrencyToggle (uses its own DropdownMenu), integrated Lang/Curr toggles directly into mobile dropdown, preserved desktop layout/Badge/notifications logic, added `flex-shrink-0` to ensure SidebarTrigger always visible, used `useIsMobile()` for conditional rendering.
+2. [x] Verified no TS errors remain.
+3. [x] Complete task.
 
-✅ Task complete: Logo added to home/Landing pages (nav/footer clickable to home) and admin/client dashboards via AppLayout header. Sidebar already had logo. Changes verified.
+## Result:
+Header now fully responsive on mobile:
+- SidebarTrigger (hamburger) always visible first after logo.
+- Right side: MoreHorizontal dropdown with Language/Currency toggles, dark mode toggle, notifications link (with badge).
+- Desktop: All items expanded horizontally.
+- Sidebar toggles Sheet overlay on mobile as designed.
+
+Updated AppSidebar to `collapsible="offcanvas"` for true mobile drawer behavior (slides in/out vs Sheet overlay). Test: DevTools mobile (<768px): hamburger opens sidebar drawer, no crowding, header compact.
+

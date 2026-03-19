@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Zap, Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { LanguageCurrencyToggle } from '@/components/LanguageCurrencyToggle';
+import { PublicHeader } from '@/components/PublicHeader';
 
 const Contact = () => {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
@@ -21,26 +21,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-border bg-card/80 backdrop-blur-lg sticky top-0 z-50">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-            <Zap className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold text-foreground">RefundPayPro</span>
-        </Link>
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-          <Link to="/" className="hover:text-foreground transition-colors">{t('nav.home')}</Link>
-          <Link to="/about" className="hover:text-foreground transition-colors">{t('nav.about')}</Link>
-          <Link to="/services" className="hover:text-foreground transition-colors">{t('nav.services')}</Link>
-          <Link to="/faq" className="hover:text-foreground transition-colors">{t('nav.faq')}</Link>
-          <Link to="/contact" className="text-foreground">{t('nav.contact')}</Link>
-        </div>
-        <div className="flex items-center gap-2">
-          <LanguageCurrencyToggle />
-          <Link to="/login"><Button variant="ghost">{t('nav.signIn')}</Button></Link>
-          <Link to="/register"><Button className="gradient-primary border-0 text-primary-foreground">{t('nav.getStarted')}</Button></Link>
-        </div>
-      </nav>
+      <PublicHeader />
 
       <section className="px-6 md:px-12 py-20 max-w-6xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
@@ -53,7 +34,7 @@ const Contact = () => {
         <div className="grid md:grid-cols-3 gap-8">
           <div className="space-y-6">
             {[
-              { icon: Mail, title: t('contact.emailUs'), detail: 'support@RefundPayPro.com', sub: t('contact.emailResponse') },
+              { icon: Mail, title: t('contact.emailUs'), detail: 'refundpaypro@gmail.com', sub: t('contact.emailResponse') },
               { icon: Phone, title: t('contact.callUs'), detail: '+1 (800) 555-0199', sub: t('contact.callHours') },
               { icon: MessageCircle, title: t('contact.liveChat'), detail: t('contact.liveChatAvail'), sub: t('contact.liveChatResponse') },
               { icon: MapPin, title: t('contact.office'), detail: '123 Finance Street', sub: 'New York, NY 10001' },
@@ -92,7 +73,7 @@ const Contact = () => {
         <div className="bg-card border border-border rounded-2xl overflow-hidden h-64 flex items-center justify-center">
           <div className="text-center text-muted-foreground">
             <MapPin className="w-12 h-12 mx-auto mb-2 text-primary" />
-            <p className="font-medium text-foreground">123 Finance Street, New York, NY 10001</p>
+            <p className="font-medium text-foreground">103 Finance Street, New York, NY 10001</p>
             <p className="text-sm">United States</p>
           </div>
         </div>

@@ -44,7 +44,7 @@ export function AppSidebar() {
   const items = user?.role === 'admin' ? adminItems : clientItems;
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="offcanvas">
       <SidebarContent className="pt-4">
         <div className={`px-4 mb-6 ${collapsed ? 'px-2' : ''}`}>
           <div className="flex items-center gap-2">

@@ -2,23 +2,12 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Shield, Zap, RefreshCw, CreditCard } from 'lucide-react';
+import { PublicHeader } from '@/components/PublicHeader';
 
 const Landing = () => {
   return (
     <div className="min-h-screen bg-background">
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b bg-card/80 backdrop-blur-lg sticky top-0 z-50">
-        <div className="flex items-center gap-2">
-<img src="/RefunPayPro-logo.png" alt="RefundPayPro" className="h-8 w-auto" />
-          <Link to="/" className="ml-2">
-          <span className="text-xl font-bold">RefundPayPro</span>
-          </Link>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link to="/login"><Button variant="ghost">Sign In</Button></Link>
-          <Link to="/register"><Button className="gradient-primary border-0 text-primary-foreground">Get Started</Button></Link>
-        </div>
-      </nav>
+      <PublicHeader showNavLinks={false} />
 
       {/* Hero */}
       <section className="px-6 md:px-12 py-20 md:py-32 max-w-6xl mx-auto text-center">

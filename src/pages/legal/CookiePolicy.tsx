@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Zap } from 'lucide-react';
+import { PublicHeader } from '@/components/PublicHeader';
 
 const sections = [
   { title: '1. What Are Cookies', content: 'Cookies are small text files stored on your device when you visit our website. They help us provide a better experience by remembering your preferences, keeping you signed in, and understanding how you use our platform.' },
@@ -15,18 +14,7 @@ const sections = [
 
 const CookiePolicy = () => (
   <div className="min-h-screen bg-background">
-    <nav className="flex items-center justify-between px-6 md:px-12 py-4 border-b border-border bg-card/80 backdrop-blur-lg sticky top-0 z-50">
-      <Link to="/" className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-          <Zap className="w-5 h-5 text-primary-foreground" />
-        </div>
-        <span className="text-xl font-bold text-foreground">RefundPayPro</span>
-      </Link>
-      <div className="flex items-center gap-3">
-        <Link to="/login"><Button variant="ghost">Sign In</Button></Link>
-        <Link to="/register"><Button className="gradient-primary border-0 text-primary-foreground">Get Started</Button></Link>
-      </div>
-    </nav>
+    <PublicHeader showNavLinks={false} />
 
     <div className="max-w-3xl mx-auto px-6 py-16">
       <h1 className="text-4xl font-extrabold text-foreground mb-2">Cookie Policy</h1>
