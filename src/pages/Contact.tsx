@@ -6,13 +6,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Zap, Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageCurrencyToggle } from '@/components/LanguageCurrencyToggle';
 
 const Contact = () => {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const { t } = useLanguage();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success('Message sent! We\'ll get back to you within 24 hours.');
+    toast.success(t('contact.messageSent'));
     setForm({ name: '', email: '', subject: '', message: '' });
   };
 
@@ -26,36 +29,34 @@ const Contact = () => {
           <span className="text-xl font-bold text-foreground">RefundPayPro</span>
         </Link>
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-          <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
-          <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
-          <Link to="/services" className="hover:text-foreground transition-colors">Services</Link>
-          <Link to="/faq" className="hover:text-foreground transition-colors">FAQ</Link>
-          <Link to="/contact" className="text-foreground">Contact</Link>
+          <Link to="/" className="hover:text-foreground transition-colors">{t('nav.home')}</Link>
+          <Link to="/about" className="hover:text-foreground transition-colors">{t('nav.about')}</Link>
+          <Link to="/services" className="hover:text-foreground transition-colors">{t('nav.services')}</Link>
+          <Link to="/faq" className="hover:text-foreground transition-colors">{t('nav.faq')}</Link>
+          <Link to="/contact" className="text-foreground">{t('nav.contact')}</Link>
         </div>
-        <div className="flex items-center gap-3">
-          <Link to="/login"><Button variant="ghost">Sign In</Button></Link>
-          <Link to="/register"><Button className="gradient-primary border-0 text-primary-foreground">Get Started</Button></Link>
+        <div className="flex items-center gap-2">
+          <LanguageCurrencyToggle />
+          <Link to="/login"><Button variant="ghost">{t('nav.signIn')}</Button></Link>
+          <Link to="/register"><Button className="gradient-primary border-0 text-primary-foreground">{t('nav.getStarted')}</Button></Link>
         </div>
       </nav>
 
       <section className="px-6 md:px-12 py-20 max-w-6xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-foreground">Get In <span className="text-gradient">Touch</span></h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Have a question or need help? We're here for you 24/7.
-          </p>
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-foreground">{t('contact.title')} <span className="text-gradient">{t('contact.titleHighlight')}</span></h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">{t('contact.desc')}</p>
         </motion.div>
       </section>
 
       <section className="px-6 md:px-12 pb-20 max-w-6xl mx-auto">
         <div className="grid md:grid-cols-3 gap-8">
-          {/* Contact Info */}
           <div className="space-y-6">
             {[
-              { icon: Mail, title: 'Email Us', detail: 'support@RefundPayPro.com', sub: 'We respond within 24 hours' },
-              { icon: Phone, title: 'Call Us', detail: '+1 (800) 555-0199', sub: 'Mon-Fri 9AM - 6PM EST' },
-              { icon: MessageCircle, title: 'Live Chat', detail: 'Available 24/7', sub: 'Average response: 2 minutes' },
-              { icon: MapPin, title: 'Office', detail: '123 Finance Street', sub: 'New York, NY 10001' },
+              { icon: Mail, title: t('contact.emailUs'), detail: 'support@RefundPayPro.com', sub: t('contact.emailResponse') },
+              { icon: Phone, title: t('contact.callUs'), detail: '+1 (800) 555-0199', sub: t('contact.callHours') },
+              { icon: MessageCircle, title: t('contact.liveChat'), detail: t('contact.liveChatAvail'), sub: t('contact.liveChatResponse') },
+              { icon: MapPin, title: t('contact.office'), detail: '123 Finance Street', sub: 'New York, NY 10001' },
             ].map((c, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                 className="bg-card border border-border rounded-2xl p-6 flex items-start gap-4">
@@ -71,24 +72,22 @@ const Contact = () => {
             ))}
           </div>
 
-          {/* Contact Form */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
             className="md:col-span-2 bg-card border border-border rounded-2xl p-8">
-            <h2 className="text-2xl font-bold text-foreground mb-6">Send us a Message</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-6">{t('contact.sendMessage')}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
-                <Input placeholder="Your Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
-                <Input type="email" placeholder="Your Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
+                <Input placeholder={t('contact.yourName')} value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
+                <Input type="email" placeholder={t('contact.yourEmail')} value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
               </div>
-              <Input placeholder="Subject" value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} required />
-              <Textarea placeholder="Your message..." rows={6} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} required />
-              <Button type="submit" className="gradient-primary border-0 text-primary-foreground w-full h-12">Send Message</Button>
+              <Input placeholder={t('contact.subject')} value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} required />
+              <Textarea placeholder={t('contact.yourMessage')} rows={6} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} required />
+              <Button type="submit" className="gradient-primary border-0 text-primary-foreground w-full h-12">{t('contact.send')}</Button>
             </form>
           </motion.div>
         </div>
       </section>
 
-      {/* Map placeholder */}
       <section className="px-6 md:px-12 pb-20 max-w-6xl mx-auto">
         <div className="bg-card border border-border rounded-2xl overflow-hidden h-64 flex items-center justify-center">
           <div className="text-center text-muted-foreground">
@@ -101,12 +100,12 @@ const Contact = () => {
 
       <footer className="border-t border-border py-8 px-6 md:px-12 text-center text-sm text-muted-foreground bg-card">
         <div className="flex flex-wrap justify-center gap-4 mb-4">
-          <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-          <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
-          <Link to="/refund-policy" className="hover:text-foreground transition-colors">Refund Policy</Link>
-          <Link to="/cookies" className="hover:text-foreground transition-colors">Cookies</Link>
+          <Link to="/privacy" className="hover:text-foreground transition-colors">{t('footer.privacy')}</Link>
+          <Link to="/terms" className="hover:text-foreground transition-colors">{t('footer.terms')}</Link>
+          <Link to="/refund-policy" className="hover:text-foreground transition-colors">{t('footer.refundPolicy')}</Link>
+          <Link to="/cookies" className="hover:text-foreground transition-colors">{t('footer.cookies')}</Link>
         </div>
-        © {new Date().getFullYear()} RefundPayPro. All rights reserved.
+        © {new Date().getFullYear()} RefundPayPro. {t('footer.rights')}
       </footer>
     </div>
   );

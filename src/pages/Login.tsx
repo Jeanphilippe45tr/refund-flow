@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { motion } from 'framer-motion';
-import { Zap, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import loginHero from '@/assets/login-hero.png';
+import { LanguageCurrencyToggle } from '@/components/LanguageCurrencyToggle';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,13 +17,14 @@ const Login = () => {
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     const success = await login(email, password);
     if (success) {
-      toast.success('Welcome back!');
+      toast.success(t('login.welcomeBack') + '!');
     } else {
       toast.error('Invalid credentials or account suspended');
     }
@@ -42,26 +45,27 @@ const Login = () => {
         <div className="text-center text-primary-foreground z-10 px-12">
           <img src={loginHero} alt="Secure login" className="w-64 h-64 mx-auto mb-6 object-contain" />
           <h2 className="text-4xl font-bold mb-4">RefundPayPro</h2>
-          <p className="text-lg opacity-90">
-            Your trusted platform for seamless refund management
-          </p>
+          <p className="text-lg opacity-90">{t('login.platformDesc')}</p>
         </div>
       </div>
       <div className="flex-1 flex items-center justify-center p-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-<Link to="/" className="flex items-center gap-2 mb-8 lg:hidden hover:opacity-80 transition-opacity">
-          <img src="/RefunPayPro-logo.png" alt="RefundPayPro Home" className="h-8 w-auto" />
-            <span className="text-xl font-bold">RefundPayPro</span>
+          <div className="flex items-center justify-between mb-8">
+            <Link to="/" className="flex items-center gap-2 lg:hidden hover:opacity-80 transition-opacity">
+              <img src="/RefunPayPro-logo.png" alt="RefundPayPro Home" className="h-8 w-auto" />
+              <span className="text-xl font-bold">RefundPayPro</span>
             </Link>
-          <h1 className="text-3xl font-bold mb-2 text-foreground">Welcome back</h1>
-          <p className="text-muted-foreground mb-8">Sign in to your account to continue</p>
+            <LanguageCurrencyToggle />
+          </div>
+          <h1 className="text-3xl font-bold mb-2 text-foreground">{t('login.welcomeBack')}</h1>
+          <p className="text-muted-foreground mb-8">{t('login.signInDesc')}</p>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('login.email')}</Label>
               <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required className="mt-1.5 h-11" />
             </div>
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('login.password')}</Label>
               <div className="relative mt-1.5">
                 <Input id="password" type={showPw ? 'text' : 'password'} placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required className="h-11 pr-10" />
                 <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
@@ -70,14 +74,14 @@ const Login = () => {
               </div>
             </div>
             <Button type="submit" disabled={loading} className="w-full h-11 gradient-primary border-0 text-primary-foreground">
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? t('login.signingIn') : t('login.signIn')}
             </Button>
           </form>
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account? <Link to="/register" className="text-primary font-semibold hover:underline">Create one</Link>
+            {t('login.noAccount')} <Link to="/register" className="text-primary font-semibold hover:underline">{t('login.createOne')}</Link>
           </p>
           <p className="mt-6 text-center text-sm text-muted-foreground">
-             <Link to="/" className="text-primary font-semibold hover:underline">Back to home page</Link>
+            <Link to="/" className="text-primary font-semibold hover:underline">{t('login.backHome')}</Link>
           </p>
         </motion.div>
       </div>

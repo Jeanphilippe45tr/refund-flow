@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { AppLayout } from '@/layouts/AppLayout';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Button } from '@/components/ui/button';
@@ -35,6 +37,8 @@ const paymentMethods = [
 
 const WithdrawPage = () => {
   const { user, refreshUser } = useAuth();
+  const { t } = useLanguage();
+  const { formatAmount, symbol } = useCurrency();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ accountHolder: '', paymentMethod: '', walletDetails: '', country: '', amount: '', message: '' });
@@ -79,7 +83,7 @@ const WithdrawPage = () => {
     e.preventDefault();
     const amount = parseFloat(form.amount);
     if (amount <= 0 || amount > (user?.balance || 0)) {
-      toast.error('Invalid amount or insufficient balance');
+      toast.error(t('withdraw.invalidAmount'));
       return;
     }
     const { error } = await supabase.from('withdraw_requests').insert({
@@ -97,19 +101,19 @@ const WithdrawPage = () => {
         status: 'pending',
         description: `${selectedMethod?.label || form.paymentMethod} withdrawal`,
       });
-      toast.success('Withdrawal request submitted!');
+      toast.success(t('withdraw.submitted'));
       queryClient.invalidateQueries({ queryKey: ['my-withdrawals'] });
       setOpen(false);
       setForm({ accountHolder: '', paymentMethod: '', walletDetails: '', country: '', amount: '', message: '' });
     } else {
-      toast.error('Failed to submit');
+      toast.error(t('withdraw.failed'));
     }
   };
 
   const cancelWithdrawal = async (id: string) => {
     await supabase.from('withdraw_requests').delete().eq('id', id).eq('user_id', user!.id);
     queryClient.invalidateQueries({ queryKey: ['my-withdrawals'] });
-    toast.info('Withdrawal cancelled');
+    toast.info(t('withdraw.cancelled'));
   };
 
   const getMethodLabel = (value: string) => paymentMethods.find(m => m.value === value)?.label || value.replace(/_/g, ' ');
@@ -119,24 +123,24 @@ const WithdrawPage = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Withdrawals</h1>
-            <p className="text-muted-foreground">Manage your withdrawal requests</p>
+            <h1 className="text-2xl font-bold text-foreground">{t('withdraw.title')}</h1>
+            <p className="text-muted-foreground">{t('withdraw.manage')}</p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="gradient-primary border-0 text-primary-foreground"><Plus className="w-4 h-4 mr-2" /> New Withdrawal</Button>
+              <Button className="gradient-primary border-0 text-primary-foreground"><Plus className="w-4 h-4 mr-2" /> {t('withdraw.new')}</Button>
             </DialogTrigger>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-              <DialogHeader><DialogTitle>Request Withdrawal</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{t('withdraw.requestTitle')}</DialogTitle></DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4 mt-4">
                 <div>
-                  <Label>Account Holder Name</Label>
+                  <Label>{t('withdraw.accountHolder')}</Label>
                   <Input value={form.accountHolder} onChange={e => setForm(f => ({ ...f, accountHolder: e.target.value }))} required className="mt-1" />
                 </div>
                 <div>
-                  <Label>Payment Method</Label>
+                  <Label>{t('withdraw.paymentMethod')}</Label>
                   <Select value={form.paymentMethod} onValueChange={v => setForm(f => ({ ...f, paymentMethod: v }))}>
-                    <SelectTrigger className="mt-1"><SelectValue placeholder="Select method" /></SelectTrigger>
+                    <SelectTrigger className="mt-1"><SelectValue placeholder={t('withdraw.selectMethod')} /></SelectTrigger>
                     <SelectContent className="max-h-60">
                       {paymentMethods.map(m => (
                         <SelectItem key={m.value} value={m.value}>
@@ -160,15 +164,15 @@ const WithdrawPage = () => {
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><Label>Country</Label><Input value={form.country} onChange={e => setForm(f => ({ ...f, country: e.target.value }))} required className="mt-1" /></div>
+                  <div><Label>{t('withdraw.country')}</Label><Input value={form.country} onChange={e => setForm(f => ({ ...f, country: e.target.value }))} required className="mt-1" /></div>
                   <div>
-                    <Label>Amount ($)</Label>
+                    <Label>{t('withdraw.amount')} ({symbol})</Label>
                     <Input type="number" step="0.01" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} required className="mt-1" />
-                    <p className="text-xs text-muted-foreground mt-1">Balance: ${user?.balance?.toFixed(2)}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t('withdraw.balance')}: {formatAmount(user?.balance || 0)}</p>
                   </div>
                 </div>
-                <div><Label>Message (optional)</Label><Textarea value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} className="mt-1" /></div>
-                <Button type="submit" className="w-full gradient-primary border-0 text-primary-foreground">Submit Request</Button>
+                <div><Label>{t('withdraw.message')}</Label><Textarea value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} className="mt-1" /></div>
+                <Button type="submit" className="w-full gradient-primary border-0 text-primary-foreground">{t('withdraw.submit')}</Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -176,7 +180,7 @@ const WithdrawPage = () => {
 
         {/* Payment methods grid */}
         <div className="bg-card rounded-xl border border-border p-5">
-          <h3 className="text-sm font-semibold text-muted-foreground mb-3">Supported Payment Methods</h3>
+          <h3 className="text-sm font-semibold text-muted-foreground mb-3">{t('withdraw.supportedMethods')}</h3>
           <div className="flex flex-wrap gap-2">
             {paymentMethods.map(m => (
               <div key={m.value} className="flex items-center gap-1.5 bg-muted/50 rounded-lg px-3 py-1.5 text-xs font-medium text-foreground">
@@ -191,24 +195,24 @@ const WithdrawPage = () => {
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Amount</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Method</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Date</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Actions</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('table.amount')}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('table.method')}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('table.status')}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('table.date')}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{t('table.actions')}</th>
               </tr>
             </thead>
             <tbody>
               {myWithdrawals.map((w: any, i: number) => (
                 <motion.tr key={w.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-semibold">${Number(w.amount).toFixed(2)}</td>
+                  <td className="p-4 font-semibold">{formatAmount(Number(w.amount))}</td>
                   <td className="p-4 text-sm">{getMethodLabel(w.payment_method)}</td>
                   <td className="p-4"><StatusBadge status={w.status} /></td>
                   <td className="p-4 text-sm text-muted-foreground">{format(new Date(w.created_at), 'MMM dd, yyyy')}</td>
                   <td className="p-4">
                     {w.status === 'pending' && (
                       <Button variant="ghost" size="sm" onClick={() => cancelWithdrawal(w.id)} className="text-destructive hover:text-destructive">
-                        <X className="w-4 h-4 mr-1" /> Cancel
+                        <X className="w-4 h-4 mr-1" /> {t('withdraw.cancel')}
                       </Button>
                     )}
                     {w.status === 'rejected' && w.rejection_reason && (
@@ -217,7 +221,7 @@ const WithdrawPage = () => {
                   </td>
                 </motion.tr>
               ))}
-              {myWithdrawals.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">No withdrawals yet</td></tr>}
+              {myWithdrawals.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">{t('withdraw.noWithdrawals')}</td></tr>}
             </tbody>
           </table>
         </div>
