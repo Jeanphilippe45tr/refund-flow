@@ -105,7 +105,7 @@ const ProfilePage = () => {
 
       // Update profile
       await updateProfile({ profilePhoto: publicUrl });
-      setProfilePhotoPreview(signedUrl || publicUrl);
+      setProfilePhotoPreview(signedUrl?.signedUrl || publicUrl);
       toast.success('Profile photo updated!');
     } catch (error) {
       console.error('Upload error:', error);

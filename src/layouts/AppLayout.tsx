@@ -2,14 +2,17 @@ import { ReactNode } from 'react';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Bell, Moon, Sun } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { LanguageCurrencyToggle } from '@/components/LanguageCurrencyToggle';
 
 export const AppLayout = ({ children }: { children: ReactNode }) => {
   const { user, darkMode, toggleDarkMode } = useAuth();
+  const { t } = useLanguage();
 
   const { data: unreadCount = 0 } = useQuery({
     queryKey: ['unread-notifications', user?.id],
@@ -37,10 +40,11 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
               </Link>
               <SidebarTrigger />
               <span className="text-sm text-muted-foreground hidden sm:block">
-                Welcome back, <span className="font-semibold text-foreground">{user?.name}</span>
+                {t('header.welcomeBack')} <span className="font-semibold text-foreground">{user?.name}</span>
               </span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <LanguageCurrencyToggle />
               <button onClick={toggleDarkMode} className="p-2 rounded-lg hover:bg-muted transition-colors">
                 {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
