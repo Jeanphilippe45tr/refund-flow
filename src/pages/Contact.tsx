@@ -8,15 +8,39 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PublicHeader } from '@/components/PublicHeader';
+import { supabase } from '@/integrations/supabase/client';
 
 const Contact = () => {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(t('contact.messageSent'));
-    setForm({ name: '', email: '', subject: '', message: '' });
+
+    try {
+      setIsSubmitting(true);
+
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+        },
+      });
+
+      if (error || !data?.success) {
+        throw new Error(error?.message || data?.error || 'Failed to send message');
+      }
+
+      toast.success(t('contact.messageSent'));
+      setForm({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      toast.error('Message not sent. Please try again in a moment.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -63,7 +87,9 @@ const Contact = () => {
               </div>
               <Input placeholder={t('contact.subject')} value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} required />
               <Textarea placeholder={t('contact.yourMessage')} rows={6} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} required />
-              <Button type="submit" className="gradient-primary border-0 text-primary-foreground w-full h-12">{t('contact.send')}</Button>
+              <Button type="submit" disabled={isSubmitting} className="gradient-primary border-0 text-primary-foreground w-full h-12">
+                {isSubmitting ? 'Sending...' : t('contact.send')}
+              </Button>
             </form>
           </motion.div>
         </div>

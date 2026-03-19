@@ -13,35 +13,37 @@ const FAQ = () => {
     {
       title: t('faq.refundProcess'),
       faqs: [
-        { q: 'How long does a refund take?', a: 'Most refunds are processed within 1-3 business days. Bank transfers may take up to 5 business days depending on your financial institution.' },
-        { q: 'What are the refund conditions?', a: 'Refunds are issued for verified transactions where the product or service was not delivered as promised, was defective, or did not match the description.' },
-        { q: 'Can I cancel a refund request?', a: 'Yes, you can cancel a pending refund request from your dashboard. Once a refund has been approved and processed, it cannot be reversed.' },
-        { q: 'What if my refund is rejected?', a: 'If your refund is rejected, you will receive a detailed explanation from our admin team. You can appeal the decision by opening a support ticket.' },
+        { q: t('faq.refundTimeQ'), a: t('faq.refundTimeA') },
+        { q: t('faq.refundConditionsQ'), a: t('faq.refundConditionsA') },
+        { q: t('faq.serviceFeesQ'), a: t('faq.serviceFeesA') },
+        { q: t('faq.onboardingFeeQ'), a: t('faq.onboardingFeeA') },
+        { q: t('faq.cancelRefundQ'), a: t('faq.cancelRefundA') },
+        { q: t('faq.rejectedRefundQ'), a: t('faq.rejectedRefundA') },
       ],
     },
     {
       title: t('faq.requiredDocs'),
       faqs: [
-        { q: 'What documents do I need for a refund?', a: 'Typically you need proof of purchase (receipt, order confirmation), evidence of the issue (screenshots, photos), and your identification.' },
-        { q: 'Do I need to provide bank statements?', a: 'Bank statements may be required for certain disputes to verify the original transaction. We only ask for this when absolutely necessary.' },
-        { q: 'How do I upload proof documents?', a: 'You can upload documents directly through your dashboard when submitting a refund request or through the support ticket system.' },
+        { q: t('faq.requiredDocsQ1'), a: t('faq.requiredDocsA1') },
+        { q: t('faq.requiredDocsQ2'), a: t('faq.requiredDocsA2') },
+        { q: t('faq.requiredDocsQ3'), a: t('faq.requiredDocsA3') },
       ],
     },
     {
       title: t('faq.paymentMethods'),
       faqs: [
-        { q: 'What withdrawal methods are available?', a: 'We support Bank Transfer, Mobile Money (MTN, Orange, etc.), PayPal, and Cryptocurrency wallets (BTC, ETH, USDT).' },
-        { q: 'Are there fees for withdrawals?', a: 'Standard bank transfers are free. PayPal withdrawals have a 2% fee. Crypto and Mobile Money withdrawals have minimal network fees.' },
-        { q: 'Can I change my withdrawal method?', a: 'Yes, you can select a different withdrawal method for each withdrawal request. You can also update your default payment method in your profile.' },
-        { q: 'What currencies are supported?', a: 'We primarily operate in USD but support conversions to EUR, GBP, XAF, NGN, and major cryptocurrencies.' },
+        { q: t('faq.paymentMethodsQ1'), a: t('faq.paymentMethodsA1') },
+        { q: t('faq.paymentMethodsQ2'), a: t('faq.paymentMethodsA2') },
+        { q: t('faq.paymentMethodsQ3'), a: t('faq.paymentMethodsA3') },
+        { q: t('faq.paymentMethodsQ4'), a: t('faq.paymentMethodsA4') },
       ],
     },
     {
       title: t('faq.accountSecurity'),
       faqs: [
-        { q: 'How do I reset my password?', a: 'Click "Forgot Password" on the login page and follow the instructions sent to your registered email.' },
-        { q: 'Is my financial information secure?', a: 'Yes. We use bank-level encryption, two-factor authentication, and comply with international data protection regulations.' },
-        { q: 'Can I delete my account?', a: 'Yes, you can request account deletion through your profile settings or by contacting support. All data will be permanently removed within 30 days.' },
+        { q: t('faq.accountSecurityQ1'), a: t('faq.accountSecurityA1') },
+        { q: t('faq.accountSecurityQ2'), a: t('faq.accountSecurityA2') },
+        { q: t('faq.accountSecurityQ3'), a: t('faq.accountSecurityA3') },
       ],
     },
   ];
