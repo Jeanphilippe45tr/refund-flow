@@ -1,4 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { AppLayout } from '@/layouts/AppLayout';
 import { StatusBadge } from '@/components/StatusBadge';
 import { ArrowUpRight, ArrowDownRight, Clock } from 'lucide-react';
@@ -9,6 +11,8 @@ import { supabase } from '@/integrations/supabase/client';
 
 const WalletPage = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
+  const { formatAmount } = useCurrency();
 
   const { data: myTx = [] } = useQuery({
     queryKey: ['wallet-transactions', user?.id],
@@ -29,46 +33,46 @@ const WalletPage = () => {
   return (
     <AppLayout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">Wallet</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t('wallet.title')}</h1>
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="gradient-primary rounded-2xl p-8 text-primary-foreground">
-          <p className="text-sm opacity-80 mb-1">Available Balance</p>
-          <p className="text-4xl font-bold">${user?.balance?.toFixed(2)}</p>
+          <p className="text-sm opacity-80 mb-1">{t('wallet.availableBalance')}</p>
+          <p className="text-4xl font-bold">{formatAmount(user?.balance || 0)}</p>
           <div className="flex gap-4 mt-6">
             <div className="bg-primary-foreground/20 rounded-lg px-4 py-2">
-              <p className="text-xs opacity-80">Total In</p>
-              <p className="font-semibold">${totalIn.toFixed(2)}</p>
+              <p className="text-xs opacity-80">{t('wallet.totalIn')}</p>
+              <p className="font-semibold">{formatAmount(totalIn)}</p>
             </div>
             <div className="bg-primary-foreground/20 rounded-lg px-4 py-2">
-              <p className="text-xs opacity-80">Total Out</p>
-              <p className="font-semibold">${totalOut.toFixed(2)}</p>
+              <p className="text-xs opacity-80">{t('wallet.totalOut')}</p>
+              <p className="font-semibold">{formatAmount(totalOut)}</p>
             </div>
           </div>
         </motion.div>
         <div className="bg-card rounded-xl border border-border">
-          <div className="p-6 border-b border-border"><h3 className="font-semibold text-foreground">Transaction Timeline</h3></div>
+          <div className="p-6 border-b border-border"><h3 className="font-semibold text-foreground">{t('wallet.timeline')}</h3></div>
           <div className="divide-y divide-border">
-            {myTx.map((t: any, i: number) => (
-              <motion.div key={t.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }} className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors">
+            {myTx.map((tx: any, i: number) => (
+              <motion.div key={tx.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }} className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${t.type === 'refund' ? 'bg-success/10' : 'bg-accent'}`}>
-                    {t.type === 'refund' ? <ArrowDownRight className="w-4 h-4 text-success" /> : <ArrowUpRight className="w-4 h-4 text-primary" />}
+                  <div className={`p-2 rounded-lg ${tx.type === 'refund' ? 'bg-success/10' : 'bg-accent'}`}>
+                    {tx.type === 'refund' ? <ArrowDownRight className="w-4 h-4 text-success" /> : <ArrowUpRight className="w-4 h-4 text-primary" />}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">{t.description || t.type}</p>
+                    <p className="text-sm font-medium text-foreground">{tx.description || tx.type}</p>
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Clock className="w-3 h-3" /> {format(new Date(t.created_at), 'MMM dd, yyyy HH:mm')}
+                      <Clock className="w-3 h-3" /> {format(new Date(tx.created_at), 'MMM dd, yyyy HH:mm')}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`font-semibold ${t.type === 'refund' ? 'text-success' : ''}`}>
-                    {t.type === 'refund' ? '+' : '-'}${Number(t.amount).toFixed(2)}
+                  <span className={`font-semibold ${tx.type === 'refund' ? 'text-success' : ''}`}>
+                    {tx.type === 'refund' ? '+' : '-'}{formatAmount(Number(tx.amount))}
                   </span>
-                  <StatusBadge status={t.status} />
+                  <StatusBadge status={tx.status} />
                 </div>
               </motion.div>
             ))}
-            {myTx.length === 0 && <p className="p-6 text-center text-muted-foreground">No transactions yet</p>}
+            {myTx.length === 0 && <p className="p-6 text-center text-muted-foreground">{t('dashboard.noTransactions')}</p>}
           </div>
         </div>
       </div>
