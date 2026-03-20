@@ -69,7 +69,7 @@ const Landing = () => {
 
       {/* Footer */}
       <footer className="border-t py-8 px-6 md:px-12 text-center text-sm text-muted-foreground">
-        © 2024 RefundPayPro. All rights reserved.
+        © 2015 RefundPayPro. All rights reserved.
       </footer>
     </div>
   );

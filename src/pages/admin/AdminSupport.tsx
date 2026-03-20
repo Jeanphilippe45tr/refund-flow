@@ -10,10 +10,33 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const AdminSupport = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? {
+        unknown: 'Inconnu',
+        replySent: 'Réponse envoyée',
+        title: 'Tickets de support',
+        noTickets: 'Aucun ticket',
+        from: 'De',
+        you: 'Vous',
+        replyPlaceholder: 'Écrire une réponse...',
+        selectTicket: 'Sélectionnez un ticket',
+      }
+    : {
+        unknown: 'Unknown',
+        replySent: 'Reply sent',
+        title: 'Support Tickets',
+        noTickets: 'No tickets',
+        from: 'From',
+        you: 'You',
+        replyPlaceholder: 'Type a reply...',
+        selectTicket: 'Select a ticket',
+      };
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
   const [reply, setReply] = useState('');
 
@@ -43,7 +66,7 @@ const AdminSupport = () => {
     enabled: !!selectedTicket,
   });
 
-  const getUserName = (userId: string) => profiles.find((p: any) => p.user_id === userId)?.name || 'Unknown';
+  const getUserName = (userId: string) => profiles.find((p: any) => p.user_id === userId)?.name || text.unknown;
   const activeTicket = tickets.find((t: any) => t.id === selectedTicket);
 
   const handleReply = async () => {
@@ -56,13 +79,13 @@ const AdminSupport = () => {
     });
     setReply('');
     queryClient.invalidateQueries({ queryKey: ['admin-ticket-messages'] });
-    toast.success('Reply sent');
+    toast.success(text.replySent);
   };
 
   return (
     <AppLayout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">Support Tickets</h1>
+        <h1 className="text-2xl font-bold text-foreground">{text.title}</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="bg-card rounded-xl border border-border divide-y divide-border max-h-[600px] overflow-auto">
             {tickets.map((t: any) => (
@@ -74,20 +97,20 @@ const AdminSupport = () => {
                 <p className="text-xs text-muted-foreground">{getUserName(t.user_id)} · {format(new Date(t.created_at), 'MMM dd')}</p>
               </div>
             ))}
-            {tickets.length === 0 && <p className="p-6 text-center text-muted-foreground text-sm">No tickets</p>}
+            {tickets.length === 0 && <p className="p-6 text-center text-muted-foreground text-sm">{text.noTickets}</p>}
           </div>
           <div className="lg:col-span-2 bg-card rounded-xl border border-border flex flex-col min-h-[500px]">
             {activeTicket ? (
               <>
                 <div className="p-4 border-b border-border">
                   <h3 className="font-semibold text-foreground">{activeTicket.subject}</h3>
-                  <p className="text-xs text-muted-foreground">From: {getUserName(activeTicket.user_id)}</p>
+                  <p className="text-xs text-muted-foreground">{text.from}: {getUserName(activeTicket.user_id)}</p>
                 </div>
                 <div className="flex-1 p-4 space-y-3 overflow-auto">
                   {messages.map((m: any) => (
                     <motion.div key={m.id} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className={`flex ${m.is_admin ? 'justify-end' : 'justify-start'}`}>
                       <div className={`max-w-[75%] rounded-xl p-3 ${m.is_admin ? 'gradient-primary text-primary-foreground' : 'bg-muted'}`}>
-                        <p className="text-xs font-medium mb-1">{m.is_admin ? 'You' : getUserName(activeTicket.user_id)}</p>
+                        <p className="text-xs font-medium mb-1">{m.is_admin ? text.you : getUserName(activeTicket.user_id)}</p>
                         <p className="text-sm">{m.message}</p>
                         <p className={`text-xs mt-1 ${m.is_admin ? 'opacity-70' : 'text-muted-foreground'}`}>{format(new Date(m.created_at), 'HH:mm')}</p>
                       </div>
@@ -95,12 +118,12 @@ const AdminSupport = () => {
                   ))}
                 </div>
                 <div className="p-4 border-t border-border flex gap-2">
-                  <Input placeholder="Type a reply..." value={reply} onChange={e => setReply(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleReply()} />
+                  <Input placeholder={text.replyPlaceholder} value={reply} onChange={e => setReply(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleReply()} />
                   <Button onClick={handleReply} className="gradient-primary border-0 text-primary-foreground"><Send className="w-4 h-4" /></Button>
                 </div>
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">Select a ticket</div>
+              <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">{text.selectTicket}</div>
             )}
           </div>
         </div>

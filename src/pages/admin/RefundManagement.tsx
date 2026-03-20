@@ -4,8 +4,31 @@ import { format } from 'date-fns';
 import { RefreshCw } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const RefundManagement = () => {
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? {
+        unknown: 'Inconnu',
+        title: 'Historique des remboursements',
+        subtitle: 'Utilisez la gestion des utilisateurs pour ajouter de nouveaux remboursements',
+        user: 'Utilisateur',
+        amount: 'Montant',
+        note: 'Note',
+        date: 'Date',
+        empty: 'Aucun remboursement pour le moment',
+      }
+    : {
+        unknown: 'Unknown',
+        title: 'Refund History',
+        subtitle: 'Use User Management to add new refunds',
+        user: 'User',
+        amount: 'Amount',
+        note: 'Note',
+        date: 'Date',
+        empty: 'No refunds yet',
+      };
   const { data: refunds = [] } = useQuery({
     queryKey: ['admin-refunds'],
     queryFn: async () => {
@@ -22,23 +45,23 @@ const RefundManagement = () => {
     },
   });
 
-  const getUserName = (userId: string) => profiles.find((p: any) => p.user_id === userId)?.name || 'Unknown';
+  const getUserName = (userId: string) => profiles.find((p: any) => p.user_id === userId)?.name || text.unknown;
 
   return (
     <AppLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Refund History</h1>
-          <p className="text-muted-foreground">Use User Management to add new refunds</p>
+          <h1 className="text-2xl font-bold text-foreground">{text.title}</h1>
+          <p className="text-muted-foreground">{text.subtitle}</p>
         </div>
         <div className="bg-card rounded-xl border border-border overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">User</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Amount</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Note</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Date</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.user}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.amount}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.note}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.date}</th>
               </tr>
             </thead>
             <tbody>
@@ -50,7 +73,7 @@ const RefundManagement = () => {
                   <td className="p-4 text-sm text-muted-foreground">{format(new Date(r.created_at), 'MMM dd, yyyy')}</td>
                 </motion.tr>
               ))}
-              {refunds.length === 0 && <tr><td colSpan={4} className="p-8 text-center text-muted-foreground">No refunds yet</td></tr>}
+              {refunds.length === 0 && <tr><td colSpan={4} className="p-8 text-center text-muted-foreground">{text.empty}</td></tr>}
             </tbody>
           </table>
         </div>

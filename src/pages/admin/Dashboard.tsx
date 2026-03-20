@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const barData = [
   { month: 'Jan', refunds: 2400, withdrawals: 1200 },
@@ -19,6 +20,36 @@ const barData = [
 const COLORS = ['hsl(220, 100%, 56%)', 'hsl(45, 100%, 61%)', 'hsl(152, 69%, 45%)', 'hsl(0, 84%, 60%)'];
 
 const AdminDashboard = () => {
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? {
+        approved: 'Approuvés',
+        pending: 'En attente',
+        rejected: 'Rejetés',
+        title: 'Tableau de bord admin',
+        subtitle: 'Vue d’ensemble et analyses de la plateforme',
+        totalUsers: 'Utilisateurs',
+        thisMonth: '+3 ce mois',
+        platformBalance: 'Solde plateforme',
+        totalRefunds: 'Remboursements',
+        totalWithdrawn: 'Total retiré',
+        monthlyOverview: 'Aperçu mensuel',
+        withdrawalStatus: 'Statut des retraits',
+      }
+    : {
+        approved: 'Approved',
+        pending: 'Pending',
+        rejected: 'Rejected',
+        title: 'Admin Dashboard',
+        subtitle: 'Platform overview and analytics',
+        totalUsers: 'Total Users',
+        thisMonth: '+3 this month',
+        platformBalance: 'Platform Balance',
+        totalRefunds: 'Total Refunds',
+        totalWithdrawn: 'Total Withdrawn',
+        monthlyOverview: 'Monthly Overview',
+        withdrawalStatus: 'Withdrawal Status',
+      };
   const { data: profiles = [] } = useQuery({
     queryKey: ['admin-profiles'],
     queryFn: async () => {
@@ -49,28 +80,28 @@ const AdminDashboard = () => {
   const totalW = withdrawals.filter((w: any) => w.status === 'approved').reduce((s: number, w: any) => s + Number(w.amount), 0);
 
   const pieData = [
-    { name: 'Approved', value: withdrawals.filter((w: any) => w.status === 'approved').length },
-    { name: 'Pending', value: withdrawals.filter((w: any) => w.status === 'pending').length },
-    { name: 'Rejected', value: withdrawals.filter((w: any) => w.status === 'rejected').length },
+    { name: text.approved, value: withdrawals.filter((w: any) => w.status === 'approved').length },
+    { name: text.pending, value: withdrawals.filter((w: any) => w.status === 'pending').length },
+    { name: text.rejected, value: withdrawals.filter((w: any) => w.status === 'rejected').length },
   ];
 
   return (
     <AppLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Platform overview and analytics</p>
+          <h1 className="text-2xl font-bold text-foreground">{text.title}</h1>
+          <p className="text-muted-foreground">{text.subtitle}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <StatCard title="Total Users" value={String(profiles.length)} icon={<Users className="w-5 h-5 text-primary" />} change="+3 this month" positive />
-          <StatCard title="Platform Balance" value={`$${totalBalance.toFixed(2)}`} icon={<Wallet className="w-5 h-5 text-primary" />} gradient />
-          <StatCard title="Total Refunds" value={`$${totalRefunds.toFixed(2)}`} icon={<RefreshCw className="w-5 h-5 text-success" />} />
-          <StatCard title="Total Withdrawn" value={`$${totalW.toFixed(2)}`} icon={<CreditCard className="w-5 h-5 text-warning" />} />
-          <StatCard title="Pending" value={String(pendingW.length)} icon={<AlertTriangle className="w-5 h-5 text-warning" />} />
+          <StatCard title={text.totalUsers} value={String(profiles.length)} icon={<Users className="w-5 h-5 text-primary" />} change={text.thisMonth} positive />
+          <StatCard title={text.platformBalance} value={`$${totalBalance.toFixed(2)}`} icon={<Wallet className="w-5 h-5 text-primary" />} gradient />
+          <StatCard title={text.totalRefunds} value={`$${totalRefunds.toFixed(2)}`} icon={<RefreshCw className="w-5 h-5 text-success" />} />
+          <StatCard title={text.totalWithdrawn} value={`$${totalW.toFixed(2)}`} icon={<CreditCard className="w-5 h-5 text-warning" />} />
+          <StatCard title={text.pending} value={String(pendingW.length)} icon={<AlertTriangle className="w-5 h-5 text-warning" />} />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card rounded-xl p-6 border border-border">
-            <h3 className="font-semibold mb-4 text-foreground">Monthly Overview</h3>
+            <h3 className="font-semibold mb-4 text-foreground">{text.monthlyOverview}</h3>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={barData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 90%)" />
@@ -83,7 +114,7 @@ const AdminDashboard = () => {
             </ResponsiveContainer>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card rounded-xl p-6 border border-border">
-            <h3 className="font-semibold mb-4 text-foreground">Withdrawal Status</h3>
+            <h3 className="font-semibold mb-4 text-foreground">{text.withdrawalStatus}</h3>
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={5} dataKey="value">

@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const documentTypes = [
   { value: 'receipt', label: 'Purchase Receipt' },
@@ -27,6 +28,56 @@ const documentTypes = [
 const DocumentsPage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? {
+        pageTitle: 'Documents',
+        pageDesc: 'Téléversez des reçus, preuves de paiement et captures d’écran pour vérification',
+        uploadDocument: 'Téléverser un document',
+        uploadForVerification: 'Téléverser un document pour vérification',
+        documentType: 'Type de document',
+        fileLabel: 'Fichier (Max 10MB)',
+        selectFile: 'Cliquez pour sélectionner un fichier (PDF, JPG, PNG, etc.)',
+        uploading: 'Téléversement...',
+        submitVerification: 'Soumettre pour vérification',
+        totalUploaded: 'Total téléversé',
+        approved: 'Approuvés',
+        pendingReview: 'En attente',
+        file: 'Fichier',
+        type: 'Type',
+        status: 'Statut',
+        date: 'Date',
+        adminNotes: 'Notes admin',
+        noDocuments: 'Aucun document téléversé pour le moment',
+        uploadSuccess: 'Document téléversé pour vérification',
+        fileTooLarge: 'Le fichier doit faire moins de 10MB',
+        saveError: 'Impossible d’enregistrer le document',
+        uploadFailed: 'Échec du téléversement : ',
+      }
+    : {
+        pageTitle: 'Documents',
+        pageDesc: 'Upload receipts, proofs of payment, and screenshots for verification',
+        uploadDocument: 'Upload Document',
+        uploadForVerification: 'Upload Document for Verification',
+        documentType: 'Document Type',
+        fileLabel: 'File (Max 10MB)',
+        selectFile: 'Click to select file (PDF, JPG, PNG, etc.)',
+        uploading: 'Uploading...',
+        submitVerification: 'Submit for Verification',
+        totalUploaded: 'Total Uploaded',
+        approved: 'Approved',
+        pendingReview: 'Pending Review',
+        file: 'File',
+        type: 'Type',
+        status: 'Status',
+        date: 'Date',
+        adminNotes: 'Admin Notes',
+        noDocuments: 'No documents uploaded yet',
+        uploadSuccess: 'Document uploaded for verification',
+        fileTooLarge: 'File must be under 10MB',
+        saveError: 'Failed to save document record',
+        uploadFailed: 'Upload failed: ',
+      };
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [docType, setDocType] = useState('receipt');
@@ -50,7 +101,7 @@ const DocumentsPage = () => {
     const f = e.target.files?.[0];
     if (f) {
       if (f.size > 10 * 1024 * 1024) {
-        toast.error('File must be under 10MB');
+        toast.error(text.fileTooLarge);
         return;
       }
       setFile(f);
@@ -70,7 +121,7 @@ const DocumentsPage = () => {
       .upload(path, file);
 
     if (uploadError) {
-      toast.error('Upload failed: ' + uploadError.message);
+      toast.error(text.uploadFailed + uploadError.message);
       setUploading(false);
       return;
     }
@@ -85,9 +136,9 @@ const DocumentsPage = () => {
     });
 
     if (dbError) {
-      toast.error('Failed to save document record');
+      toast.error(text.saveError);
     } else {
-      toast.success('Document uploaded for verification');
+      toast.success(text.uploadSuccess);
       queryClient.invalidateQueries({ queryKey: ['my-documents'] });
       setOpen(false);
       setFile(null);
@@ -115,20 +166,20 @@ const DocumentsPage = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Documents</h1>
-            <p className="text-muted-foreground">Upload receipts, proofs of payment, and screenshots for verification</p>
+            <h1 className="text-2xl font-bold text-foreground">{text.pageTitle}</h1>
+            <p className="text-muted-foreground">{text.pageDesc}</p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button className="gradient-primary border-0 text-primary-foreground">
-                <Plus className="w-4 h-4 mr-2" /> Upload Document
+                <Plus className="w-4 h-4 mr-2" /> {text.uploadDocument}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-lg">
-              <DialogHeader><DialogTitle>Upload Document for Verification</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{text.uploadForVerification}</DialogTitle></DialogHeader>
               <form onSubmit={handleUpload} className="space-y-4 mt-4">
                 <div>
-                  <Label>Document Type</Label>
+                  <Label>{text.documentType}</Label>
                   <Select value={docType} onValueChange={setDocType}>
                     <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -139,18 +190,18 @@ const DocumentsPage = () => {
                   </Select>
                 </div>
                 <div>
-                  <Label>File (Max 10MB)</Label>
+                  <Label>{text.fileLabel}</Label>
                   <div className="mt-1 border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors cursor-pointer"
                     onClick={() => document.getElementById('file-input')?.click()}>
                     <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
                     <p className="text-sm text-muted-foreground">
-                      {file ? file.name : 'Click to select file (PDF, JPG, PNG, etc.)'}
+                      {file ? file.name : text.selectFile}
                     </p>
                   </div>
                   <Input id="file-input" type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx" onChange={handleFileChange} className="hidden" />
                 </div>
                 <Button type="submit" disabled={!file || uploading} className="w-full gradient-primary border-0 text-primary-foreground">
-                  {uploading ? 'Uploading...' : 'Submit for Verification'}
+                  {uploading ? text.uploading : text.submitVerification}
                 </Button>
               </form>
             </DialogContent>
@@ -160,9 +211,9 @@ const DocumentsPage = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { label: 'Total Uploaded', value: documents.length, color: 'text-primary' },
-            { label: 'Approved', value: documents.filter((d: any) => d.status === 'approved').length, color: 'text-success' },
-            { label: 'Pending Review', value: documents.filter((d: any) => d.status === 'pending').length, color: 'text-warning' },
+            { label: text.totalUploaded, value: documents.length, color: 'text-primary' },
+            { label: text.approved, value: documents.filter((d: any) => d.status === 'approved').length, color: 'text-success' },
+            { label: text.pendingReview, value: documents.filter((d: any) => d.status === 'pending').length, color: 'text-warning' },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-card rounded-xl border border-border p-5">
               <p className="text-sm text-muted-foreground">{s.label}</p>
@@ -176,11 +227,11 @@ const DocumentsPage = () => {
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">File</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Type</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Date</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Admin Notes</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.file}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.type}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.status}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.date}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.adminNotes}</th>
               </tr>
             </thead>
             <tbody>
@@ -202,7 +253,7 @@ const DocumentsPage = () => {
               {documents.length === 0 && (
                 <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">
                   <Upload className="w-10 h-10 mx-auto mb-3 opacity-40" />
-                  No documents uploaded yet
+                  {text.noDocuments}
                 </td></tr>
               )}
             </tbody>

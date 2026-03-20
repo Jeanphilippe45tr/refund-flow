@@ -15,6 +15,7 @@ import { motion } from 'framer-motion';
 import { User, Mail, Lock, Phone, Globe, Camera, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -35,8 +36,128 @@ const emailSchema = z.object({
   newEmail: z.string().email('Invalid email'),
 });
 
+const fileToDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.readAsDataURL(file);
+  });
+
+const loadImage = (src: string) =>
+  new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('Failed to load image'));
+    img.src = src;
+  });
+
+const resizeProfilePhoto = async (file: File) => {
+  const dataUrl = await fileToDataUrl(file);
+  const image = await loadImage(dataUrl);
+
+  const maxSize = 320;
+  const scale = Math.min(maxSize / image.width, maxSize / image.height, 1);
+  const width = Math.max(1, Math.round(image.width * scale));
+  const height = Math.max(1, Math.round(image.height * scale));
+
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  const context = canvas.getContext('2d');
+  if (!context) throw new Error('Failed to prepare image');
+
+  context.drawImage(image, 0, 0, width, height);
+
+  const output = canvas.toDataURL('image/jpeg', 0.82);
+  if (output.length > 700_000) {
+    throw new Error('Image is still too large after compression');
+  }
+
+  return output;
+};
+
 const ProfilePage = () => {
   const { user, updateProfile, refreshUser } = useAuth();
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? {
+        settings: 'Paramètres',
+        manage: 'Gérez votre profil, mot de passe et paramètres du compte',
+        profile: 'Profil',
+        password: 'Mot de passe',
+        email: 'Email',
+        profileInfo: 'Informations du profil',
+        updateInfo: 'Mettez à jour vos informations personnelles',
+        fullName: 'Nom complet',
+        clickCamera: 'Cliquez sur l’appareil photo pour changer la photo',
+        uploadingPhoto: 'Téléversement de la photo...',
+        phone: 'Téléphone',
+        country: 'Pays',
+        saveProfile: 'Enregistrer les modifications',
+        accountInfo: 'Informations du compte',
+        role: 'Rôle',
+        balance: 'Solde',
+        memberSince: 'Membre depuis',
+        changePassword: 'Changer le mot de passe',
+        passwordDesc: 'Entrez votre mot de passe actuel et votre nouveau mot de passe',
+        currentPassword: 'Mot de passe actuel',
+        newPassword: 'Nouveau mot de passe',
+        confirmPassword: 'Confirmer le nouveau mot de passe',
+        changePasswordBtn: 'Changer le mot de passe',
+        changeEmail: 'Changer l’email',
+        emailDesc: 'Supabase enverra une confirmation à la nouvelle adresse',
+        newEmail: 'Nouvel email',
+        updateEmail: 'Mettre à jour l’email',
+        validImage: 'Veuillez sélectionner une image valide',
+        fileLimit: 'La taille du fichier doit être inférieure à 10MB',
+        photoUpdated: 'Photo de profil mise à jour !',
+        uploadFailed: 'Échec du téléversement de la photo. Veuillez réessayer.',
+        profileUpdated: 'Profil mis à jour !',
+        changePasswordFailed: 'Impossible de changer le mot de passe',
+        passwordChanged: 'Mot de passe changé avec succès !',
+        emailFailed: 'Impossible de changer l’email',
+        emailRequested: 'Changement d’email demandé. Vérifiez votre boîte mail pour confirmer.',
+      }
+    : {
+        settings: 'Settings',
+        manage: 'Manage your profile, password, and account settings',
+        profile: 'Profile',
+        password: 'Password',
+        email: 'Email',
+        profileInfo: 'Profile Information',
+        updateInfo: 'Update your personal information',
+        fullName: 'Full Name',
+        clickCamera: 'Click camera to change photo',
+        uploadingPhoto: 'Uploading photo...',
+        phone: 'Phone',
+        country: 'Country',
+        saveProfile: 'Save Profile Changes',
+        accountInfo: 'Account Information',
+        role: 'Role',
+        balance: 'Balance',
+        memberSince: 'Member since',
+        changePassword: 'Change Password',
+        passwordDesc: 'Enter your current password and new password',
+        currentPassword: 'Current Password',
+        newPassword: 'New Password',
+        confirmPassword: 'Confirm New Password',
+        changePasswordBtn: 'Change Password',
+        changeEmail: 'Change Email',
+        emailDesc: 'Supabase will send confirmation to new email',
+        newEmail: 'New Email',
+        updateEmail: 'Update Email',
+        validImage: 'Please select a valid image file',
+        fileLimit: 'File size must be less than 10MB',
+        photoUpdated: 'Profile photo updated!',
+        uploadFailed: 'Failed to upload photo. Please try again.',
+        profileUpdated: 'Profile updated!',
+        changePasswordFailed: 'Failed to change password',
+        passwordChanged: 'Password changed successfully!',
+        emailFailed: 'Failed to change email',
+        emailRequested: 'Email change requested. Check your inbox for confirmation.',
+      };
 
   // Profile form
   const profileForm = useForm<z.infer<typeof profileSchema>>({
@@ -67,57 +188,42 @@ const ProfilePage = () => {
       phone: user?.phone || '',
       country: user?.country || '',
     });
+    setProfilePhotoPreview(user?.profilePhoto || '');
   }, [user]);
 
   const handleProfilePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    // 10MB limit
+    if (!file.type.startsWith('image/')) {
+      toast.error(text.validImage);
+      return;
+    }
+
+    // 10MB limit before compression
     if (file.size > 10 * 1024 * 1024) {
-      toast.error('File size must be less than 10MB');
+      toast.error(text.fileLimit);
       return;
     }
 
     setUploading(true);
     try {
-      // Upload to documents bucket (existing)
-      const fileExt = file.name.split('.').pop();
-      const timestamp = Date.now();
-      const fileName = `photo-${timestamp}.${fileExt || 'jpg'}`;
-      const filePath = `profile/${user.id}/${fileName}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('documents')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('documents')
-        .getPublicUrl(filePath);
-
-      // Ensure signed URL if private
-      const { data: signedUrl } = await supabase.storage
-        .from('documents')
-        .createSignedUrl(filePath, 3600);
-
-      // Update profile
-      await updateProfile({ profilePhoto: publicUrl });
-      setProfilePhotoPreview(signedUrl?.signedUrl || publicUrl);
-      toast.success('Profile photo updated!');
+      const optimizedPhoto = await resizeProfilePhoto(file);
+      await updateProfile({ profilePhoto: optimizedPhoto });
+      setProfilePhotoPreview(optimizedPhoto);
+      toast.success(text.photoUpdated);
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Failed to upload photo. Check console.');
+      toast.error(text.uploadFailed);
     } finally {
       setUploading(false);
+      e.target.value = '';
     }
   };
 
   const onProfileSubmit = async (values: z.infer<typeof profileSchema>) => {
     await updateProfile(values);
-    toast.success('Profile updated!');
+    toast.success(text.profileUpdated);
   };
 
   const onPasswordSubmit = async (values: z.infer<typeof passwordSchema>) => {
@@ -125,10 +231,10 @@ const ProfilePage = () => {
       password: values.newPassword,
     });
     if (error) {
-      toast.error('Failed to change password');
+      toast.error(text.changePasswordFailed);
     } else {
       passwordForm.reset();
-      toast.success('Password changed successfully!');
+      toast.success(text.passwordChanged);
     }
   };
 
@@ -137,10 +243,10 @@ const ProfilePage = () => {
       email: values.newEmail,
     });
     if (error) {
-      toast.error('Failed to change email');
+      toast.error(text.emailFailed);
     } else {
       emailForm.reset();
-      toast.success('Email change requested. Check your inbox for confirmation.');
+      toast.success(text.emailRequested);
       await refreshUser();
     }
   };
@@ -149,20 +255,20 @@ const ProfilePage = () => {
     <AppLayout>
       <div className="max-w-2xl space-y-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-2xl font-bold text-foreground mb-2">Settings</h1>
-          <p className="text-muted-foreground">Manage your profile, password, and account settings</p>
+          <h1 className="text-2xl font-bold text-foreground mb-2">{text.settings}</h1>
+          <p className="text-muted-foreground">{text.manage}</p>
         </motion.div>
 
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="profile">
-              <User className="mr-2 h-4 w-4" /> Profile
+              <User className="mr-2 h-4 w-4" /> {text.profile}
             </TabsTrigger>
             <TabsTrigger value="password">
-              <Lock className="mr-2 h-4 w-4" /> Password
+              <Lock className="mr-2 h-4 w-4" /> {text.password}
             </TabsTrigger>
             <TabsTrigger value="email">
-              <Mail className="mr-2 h-4 w-4" /> Email
+              <Mail className="mr-2 h-4 w-4" /> {text.email}
             </TabsTrigger>
           </TabsList>
 
@@ -170,8 +276,8 @@ const ProfilePage = () => {
           <TabsContent value="profile" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Profile Information</CardTitle>
-                <CardDescription>Update your personal information</CardDescription>
+                <CardTitle>{text.profileInfo}</CardTitle>
+                <CardDescription>{text.updateInfo}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Form {...profileForm}>
@@ -183,7 +289,7 @@ const ProfilePage = () => {
                           name="name"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Full Name</FormLabel>
+                              <FormLabel>{text.fullName}</FormLabel>
                               <FormControl>
                                 <Input placeholder="John Doe" {...field} />
                               </FormControl>
@@ -214,7 +320,9 @@ const ProfilePage = () => {
                             />
                           </label>
                         </div>
-                        <span className="text-xs text-muted-foreground text-center">Click camera to change photo</span>
+                        <span className="text-xs text-muted-foreground text-center">
+                          {uploading ? text.uploadingPhoto : text.clickCamera}
+                        </span>
                       </div>
                     </div>
                     <FormField
@@ -222,7 +330,7 @@ const ProfilePage = () => {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Phone</FormLabel>
+                          <FormLabel>{text.phone}</FormLabel>
                           <FormControl>
                             <Input placeholder=" +1 (555) 000-0000" {...field} />
                           </FormControl>
@@ -235,7 +343,7 @@ const ProfilePage = () => {
                       name="country"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Country</FormLabel>
+                          <FormLabel>{text.country}</FormLabel>
                           <FormControl>
                             <Input placeholder="United States" {...field} />
                           </FormControl>
@@ -244,7 +352,7 @@ const ProfilePage = () => {
                       )}
                     />
                     <Button type="submit" className="w-full gradient-primary border-0 text-primary-foreground" disabled={profileForm.formState.isSubmitting}>
-                      Save Profile Changes
+                      {text.saveProfile}
                     </Button>
                   </form>
                 </Form>
@@ -253,19 +361,19 @@ const ProfilePage = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>Account Information</CardTitle>
+                <CardTitle>{text.accountInfo}</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div className="space-y-1">
-                  <span className="text-muted-foreground">Role</span>
+                  <span className="text-muted-foreground">{text.role}</span>
                   <span className="font-semibold capitalize">{user?.role}</span>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-muted-foreground">Balance</span>
+                  <span className="text-muted-foreground">{text.balance}</span>
                   <span className="font-semibold">${user?.balance?.toLocaleString()}</span>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-muted-foreground">Member since</span>
+                  <span className="text-muted-foreground">{text.memberSince}</span>
                   <span className="font-semibold">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''}</span>
                 </div>
                 <div className="space-y-1">
@@ -280,8 +388,8 @@ const ProfilePage = () => {
           <TabsContent value="password">
             <Card>
               <CardHeader>
-                <CardTitle>Change Password</CardTitle>
-                <CardDescription>Enter your current password and new password</CardDescription>
+                <CardTitle>{text.changePassword}</CardTitle>
+                <CardDescription>{text.passwordDesc}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Form {...passwordForm}>
@@ -291,7 +399,7 @@ const ProfilePage = () => {
                       name="currentPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Current Password</FormLabel>
+                          <FormLabel>{text.currentPassword}</FormLabel>
                           <FormControl>
                             <Input type="password" placeholder="Current password" {...field} />
                           </FormControl>
@@ -304,7 +412,7 @@ const ProfilePage = () => {
                       name="newPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>New Password</FormLabel>
+                          <FormLabel>{text.newPassword}</FormLabel>
                           <FormControl>
                             <Input type="password" placeholder="New password" {...field} />
                           </FormControl>
@@ -317,7 +425,7 @@ const ProfilePage = () => {
                       name="confirmPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Confirm New Password</FormLabel>
+                          <FormLabel>{text.confirmPassword}</FormLabel>
                           <FormControl>
                             <Input type="password" placeholder="Confirm new password" {...field} />
                           </FormControl>
@@ -326,7 +434,7 @@ const ProfilePage = () => {
                       )}
                     />
                     <Button type="submit" className="w-full gradient-primary border-0 text-primary-foreground" disabled={passwordForm.formState.isSubmitting}>
-                      Change Password
+                      {text.changePasswordBtn}
                     </Button>
                   </form>
                 </Form>
@@ -338,8 +446,8 @@ const ProfilePage = () => {
           <TabsContent value="email">
             <Card>
               <CardHeader>
-                <CardTitle>Change Email</CardTitle>
-                <CardDescription>Supabase will send confirmation to new email</CardDescription>
+                <CardTitle>{text.changeEmail}</CardTitle>
+                <CardDescription>{text.emailDesc}</CardDescription>
               </CardHeader>
               <CardContent className="max-w-md">
                 <Form {...emailForm}>
@@ -349,7 +457,7 @@ const ProfilePage = () => {
                       name="newEmail"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>New Email</FormLabel>
+                          <FormLabel>{text.newEmail}</FormLabel>
                           <FormControl>
                             <Input type="email" placeholder="new@example.com" {...field} />
                           </FormControl>
@@ -358,7 +466,7 @@ const ProfilePage = () => {
                       )}
                     />
                     <Button type="submit" className="w-full gradient-primary border-0 text-primary-foreground" disabled={emailForm.formState.isSubmitting}>
-                      Update Email
+                      {text.updateEmail}
                     </Button>
                   </form>
                 </Form>
@@ -372,4 +480,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-

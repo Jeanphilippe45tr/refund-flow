@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { PublicHeader } from '@/components/PublicHeader';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const sections = [
   { title: '1. Acceptance of Terms', content: 'By accessing or using RefundPayPro, you agree to be bound by these Terms of Service. If you do not agree, you may not use our services. These terms apply to all users, including clients and administrators.' },
@@ -14,15 +15,30 @@ const sections = [
   { title: '10. Changes to Terms', content: 'We may update these terms at any time. Material changes will be communicated via email or platform notification. Continued use after changes constitutes acceptance of the updated terms.' },
 ];
 
-const TermsOfService = () => (
+const TermsOfService = () => {
+  const { language } = useLanguage();
+  const isFr = language === 'fr';
+  const localizedSections = isFr ? [
+    { title: '1. Acceptation des conditions', content: 'En accédant à RefundPayPro ou en utilisant la plateforme, vous acceptez ces conditions d’utilisation.' },
+    { title: '2. Création de compte', content: 'Vous devez fournir des informations exactes et complètes et garder vos identifiants confidentiels.' },
+    { title: '3. Services', content: 'RefundPayPro fournit une plateforme de gestion des demandes de remboursement et de retrait.' },
+    { title: '4. Obligations de l’utilisateur', content: 'Vous vous engagez à fournir des informations sincères et à ne pas utiliser la plateforme à des fins frauduleuses.' },
+    { title: '5. Frais et paiements', content: 'Certains services peuvent entraîner des frais clairement affichés avant validation.' },
+    { title: '6. Activités interdites', content: 'Toute tentative de fraude, accès non autorisé ou usage illégal est interdite.' },
+    { title: '7. Suspension', content: 'Nous pouvons suspendre ou fermer un compte en cas de violation des présentes conditions.' },
+    { title: '8. Limitation de responsabilité', content: 'Notre responsabilité est limitée dans les conditions prévues par la loi applicable.' },
+    { title: '9. Droit applicable', content: 'Ces conditions sont régies par le droit applicable indiqué par la plateforme.' },
+    { title: '10. Modifications', content: 'Nous pouvons mettre à jour ces conditions et vous informerons en cas de changement important.' },
+  ] : sections;
+  return (
   <div className="min-h-screen bg-background">
     <PublicHeader showNavLinks={false} />
 
     <div className="max-w-3xl mx-auto px-6 py-16">
-      <h1 className="text-4xl font-extrabold text-foreground mb-2">Terms of Service</h1>
-      <p className="text-muted-foreground mb-10">Last updated: March 1, 2026</p>
+      <h1 className="text-4xl font-extrabold text-foreground mb-2">{isFr ? 'Conditions d’utilisation' : 'Terms of Service'}</h1>
+      <p className="text-muted-foreground mb-10">{isFr ? 'Dernière mise à jour : 1 mars 2026' : 'Last updated: March 1, 2026'}</p>
       <div className="space-y-8">
-        {sections.map((s, i) => (
+        {localizedSections.map((s, i) => (
           <div key={i}>
             <h2 className="text-xl font-semibold text-foreground mb-2">{s.title}</h2>
             <p className="text-muted-foreground leading-relaxed">{s.content}</p>
@@ -33,14 +49,14 @@ const TermsOfService = () => (
 
     <footer className="border-t border-border py-8 px-6 text-center text-sm text-muted-foreground bg-card">
       <div className="flex flex-wrap justify-center gap-4 mb-4">
-        <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-        <Link to="/terms" className="text-foreground">Terms</Link>
-        <Link to="/refund-policy" className="hover:text-foreground transition-colors">Refund Policy</Link>
+        <Link to="/privacy" className="hover:text-foreground transition-colors">{isFr ? 'Confidentialité' : 'Privacy'}</Link>
+        <Link to="/terms" className="text-foreground">{isFr ? 'Conditions' : 'Terms'}</Link>
+        <Link to="/refund-policy" className="hover:text-foreground transition-colors">{isFr ? 'Politique de remboursement' : 'Refund Policy'}</Link>
         <Link to="/cookies" className="hover:text-foreground transition-colors">Cookies</Link>
       </div>
-      © {new Date().getFullYear()} RefundPayPro. All rights reserved.
+      © 2015 RefundPayPro. {isFr ? 'Tous droits réservés.' : 'All rights reserved.'}
     </footer>
   </div>
-);
+);};
 
 export default TermsOfService;

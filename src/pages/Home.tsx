@@ -221,7 +221,7 @@ const Home = () => {
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} RefundPayPro. {t('footer.rights')}
+          © 2015 RefundPayPro. {t('footer.rights')}
         </div>
       </footer>
     </div>

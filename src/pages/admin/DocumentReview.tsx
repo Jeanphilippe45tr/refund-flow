@@ -14,10 +14,77 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const DocumentReview = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? {
+        unknown: 'Inconnu',
+        docApproved: 'Document approuvé',
+        docRejected: 'Document rejeté',
+        statusSuccess: 'Document mis à jour',
+        previewError: 'Impossible de charger l’aperçu du document',
+        title: 'Vérification des documents',
+        subtitle: 'Examinez les reçus, preuves de paiement et captures d’écran soumis par les utilisateurs',
+        total: 'Total',
+        pending: 'En attente',
+        approved: 'Approuvé',
+        rejected: 'Rejeté',
+        search: 'Rechercher par utilisateur ou nom de fichier...',
+        all: 'Tous',
+        user: 'Utilisateur',
+        file: 'Fichier',
+        type: 'Type',
+        status: 'Statut',
+        date: 'Date',
+        actions: 'Actions',
+        preview: 'Aperçu',
+        download: 'Télécharger',
+        review: 'Examiner',
+        noDocuments: 'Aucun document trouvé',
+        reviewDocument: 'Examiner le document',
+        uploaded: 'Téléversé',
+        adminNotes: 'Notes admin (optionnel)',
+        addNotes: 'Ajouter des notes de vérification...',
+        approve: 'Approuver',
+        reject: 'Rejeter',
+        previewTitle: 'Aperçu du document',
+      }
+    : {
+        unknown: 'Unknown',
+        docApproved: 'Document Approved',
+        docRejected: 'Document Rejected',
+        statusSuccess: 'Document updated',
+        previewError: 'Could not load document preview',
+        title: 'Document Verification',
+        subtitle: 'Review receipts, proofs of payment, and screenshots submitted by users',
+        total: 'Total',
+        pending: 'Pending',
+        approved: 'Approved',
+        rejected: 'Rejected',
+        search: 'Search by user or filename...',
+        all: 'All',
+        user: 'User',
+        file: 'File',
+        type: 'Type',
+        status: 'Status',
+        date: 'Date',
+        actions: 'Actions',
+        preview: 'Preview',
+        download: 'Download',
+        review: 'Review',
+        noDocuments: 'No documents found',
+        reviewDocument: 'Review Document',
+        uploaded: 'Uploaded',
+        adminNotes: 'Admin Notes (optional)',
+        addNotes: 'Add review notes...',
+        approve: 'Approve',
+        reject: 'Reject',
+        previewTitle: 'Document Preview',
+      };
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [reviewDoc, setReviewDoc] = useState<any>(null);
@@ -40,7 +107,7 @@ const DocumentReview = () => {
     },
   });
 
-  const getUserName = (userId: string) => profiles.find((p: any) => p.user_id === userId)?.name || 'Unknown';
+  const getUserName = (userId: string) => profiles.find((p: any) => p.user_id === userId)?.name || text.unknown;
 
   const filtered = documents
     .filter((d: any) => filter === 'all' || d.status === filter)
@@ -62,7 +129,7 @@ const DocumentReview = () => {
 
     await supabase.from('notifications').insert({
       user_id: doc.user_id,
-      title: `Document ${status === 'approved' ? 'Approved' : 'Rejected'}`,
+      title: status === 'approved' ? text.docApproved : text.docRejected,
       message: `Your ${doc.document_type.replace(/_/g, ' ')} "${doc.file_name}" has been ${status}.${adminNotes ? ' Note: ' + adminNotes : ''}`,
     });
 
@@ -75,7 +142,7 @@ const DocumentReview = () => {
     queryClient.invalidateQueries({ queryKey: ['admin-documents'] });
     setReviewDoc(null);
     setAdminNotes('');
-    toast.success(`Document ${status}`);
+    toast.success(text.statusSuccess);
   };
 
   const getSignedUrl = async (path: string) => {
@@ -88,7 +155,7 @@ const DocumentReview = () => {
     if (url) {
       setPreviewDoc({ ...doc, signedUrl: url });
     } else {
-      toast.error('Could not load document preview');
+      toast.error(text.previewError);
     }
   };
 
@@ -112,17 +179,17 @@ const DocumentReview = () => {
     <AppLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Document Verification</h1>
-          <p className="text-muted-foreground">Review receipts, proofs of payment, and screenshots submitted by users</p>
+          <h1 className="text-2xl font-bold text-foreground">{text.title}</h1>
+          <p className="text-muted-foreground">{text.subtitle}</p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
-            { label: 'Total', value: documents.length },
-            { label: 'Pending', value: documents.filter((d: any) => d.status === 'pending').length },
-            { label: 'Approved', value: documents.filter((d: any) => d.status === 'approved').length },
-            { label: 'Rejected', value: documents.filter((d: any) => d.status === 'rejected').length },
+            { label: text.total, value: documents.length },
+            { label: text.pending, value: documents.filter((d: any) => d.status === 'pending').length },
+            { label: text.approved, value: documents.filter((d: any) => d.status === 'approved').length },
+            { label: text.rejected, value: documents.filter((d: any) => d.status === 'rejected').length },
           ].map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
               className="bg-card rounded-xl border border-border p-4 text-center">
@@ -136,15 +203,15 @@ const DocumentReview = () => {
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input placeholder="Search by user or filename..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
+            <Input placeholder={text.search} value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
           </div>
           <Select value={filter} onValueChange={setFilter}>
             <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="approved">Approved</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
+              <SelectItem value="all">{text.all}</SelectItem>
+              <SelectItem value="pending">{text.pending}</SelectItem>
+              <SelectItem value="approved">{text.approved}</SelectItem>
+              <SelectItem value="rejected">{text.rejected}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -154,12 +221,12 @@ const DocumentReview = () => {
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">User</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">File</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Type</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Date</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Actions</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.user}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.file}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.type}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.status}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.date}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.actions}</th>
               </tr>
             </thead>
             <tbody>
@@ -178,15 +245,15 @@ const DocumentReview = () => {
                   <td className="p-4 text-sm text-muted-foreground">{format(new Date(doc.created_at), 'MMM dd, yyyy')}</td>
                   <td className="p-4">
                     <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="sm" onClick={() => handlePreview(doc)} title="Preview">
+                      <Button variant="ghost" size="sm" onClick={() => handlePreview(doc)} title={text.preview}>
                         <Eye className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDownload(doc)} title="Download">
+                      <Button variant="ghost" size="sm" onClick={() => handleDownload(doc)} title={text.download}>
                         <Download className="w-4 h-4" />
                       </Button>
                       {doc.status === 'pending' && (
                         <>
-                          <Button variant="ghost" size="sm" onClick={() => { setReviewDoc(doc); setAdminNotes(''); }} title="Review">
+                          <Button variant="ghost" size="sm" onClick={() => { setReviewDoc(doc); setAdminNotes(''); }} title={text.review}>
                             <Check className="w-4 h-4 text-success" />
                           </Button>
                         </>
@@ -195,7 +262,7 @@ const DocumentReview = () => {
                   </td>
                 </motion.tr>
               ))}
-              {filtered.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No documents found</td></tr>}
+              {filtered.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">{text.noDocuments}</td></tr>}
             </tbody>
           </table>
         </div>
@@ -203,25 +270,25 @@ const DocumentReview = () => {
         {/* Review Dialog */}
         <Dialog open={!!reviewDoc} onOpenChange={() => setReviewDoc(null)}>
           <DialogContent>
-            <DialogHeader><DialogTitle>Review Document</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{text.reviewDocument}</DialogTitle></DialogHeader>
             {reviewDoc && (
               <div className="space-y-4 mt-4">
                 <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                  <p className="text-sm"><span className="font-medium">User:</span> {getUserName(reviewDoc.user_id)}</p>
-                  <p className="text-sm"><span className="font-medium">Type:</span> {reviewDoc.document_type.replace(/_/g, ' ')}</p>
-                  <p className="text-sm"><span className="font-medium">File:</span> {reviewDoc.file_name}</p>
-                  <p className="text-sm"><span className="font-medium">Uploaded:</span> {format(new Date(reviewDoc.created_at), 'MMM dd, yyyy HH:mm')}</p>
+                  <p className="text-sm"><span className="font-medium">{text.user}:</span> {getUserName(reviewDoc.user_id)}</p>
+                  <p className="text-sm"><span className="font-medium">{text.type}:</span> {reviewDoc.document_type.replace(/_/g, ' ')}</p>
+                  <p className="text-sm"><span className="font-medium">{text.file}:</span> {reviewDoc.file_name}</p>
+                  <p className="text-sm"><span className="font-medium">{text.uploaded}:</span> {format(new Date(reviewDoc.created_at), 'MMM dd, yyyy HH:mm')}</p>
                 </div>
                 <div>
-                  <Label>Admin Notes (optional)</Label>
-                  <Textarea value={adminNotes} onChange={e => setAdminNotes(e.target.value)} className="mt-1" placeholder="Add review notes..." />
+                  <Label>{text.adminNotes}</Label>
+                  <Textarea value={adminNotes} onChange={e => setAdminNotes(e.target.value)} className="mt-1" placeholder={text.addNotes} />
                 </div>
                 <div className="flex gap-3">
                   <Button onClick={() => updateStatus(reviewDoc.id, 'approved')} className="flex-1 bg-success hover:bg-success/90 text-success-foreground">
-                    <Check className="w-4 h-4 mr-2" /> Approve
+                    <Check className="w-4 h-4 mr-2" /> {text.approve}
                   </Button>
                   <Button onClick={() => updateStatus(reviewDoc.id, 'rejected')} variant="destructive" className="flex-1">
-                    <X className="w-4 h-4 mr-2" /> Reject
+                    <X className="w-4 h-4 mr-2" /> {text.reject}
                   </Button>
                 </div>
               </div>
@@ -232,7 +299,7 @@ const DocumentReview = () => {
         {/* Preview Dialog */}
         <Dialog open={!!previewDoc} onOpenChange={() => setPreviewDoc(null)}>
           <DialogContent className="max-w-2xl">
-            <DialogHeader><DialogTitle>Document Preview</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{text.previewTitle}</DialogTitle></DialogHeader>
             {previewDoc && (
               <div className="mt-4">
                 {isImage(previewDoc.file_name) ? (

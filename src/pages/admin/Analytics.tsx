@@ -2,6 +2,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { AppLayout } from '@/layouts/AppLayout';
 import { motion } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const monthlyData = [
   { month: 'Jan', users: 10, refunds: 2400, withdrawals: 1200 },
@@ -13,14 +14,18 @@ const monthlyData = [
 ];
 
 const Analytics = () => {
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? { title: 'Analyses', userGrowth: 'Croissance des utilisateurs', refundsVsWithdrawals: 'Remboursements vs retraits' }
+    : { title: 'Analytics', userGrowth: 'User Growth', refundsVsWithdrawals: 'Refunds vs Withdrawals' };
   return (
     <AppLayout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Analytics</h1>
+        <h1 className="text-2xl font-bold">{text.title}</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-xl p-6 border border-border">
-            <h3 className="font-semibold mb-4">User Growth</h3>
+            <h3 className="font-semibold mb-4">{text.userGrowth}</h3>
             <ResponsiveContainer width="100%" height={280}>
               <AreaChart data={monthlyData}>
                 <defs>
@@ -39,7 +44,7 @@ const Analytics = () => {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card rounded-xl p-6 border border-border">
-            <h3 className="font-semibold mb-4">Refunds vs Withdrawals</h3>
+            <h3 className="font-semibold mb-4">{text.refundsVsWithdrawals}</h3>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 90%)" />

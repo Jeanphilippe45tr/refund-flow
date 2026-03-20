@@ -6,9 +6,30 @@ import { format } from 'date-fns';
 import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const TransactionsPage = () => {
   const { user } = useAuth();
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? {
+        title: 'Historique des transactions',
+        type: 'Type',
+        description: 'Description',
+        amount: 'Montant',
+        status: 'Statut',
+        date: 'Date',
+        empty: 'Aucune transaction',
+      }
+    : {
+        title: 'Transaction History',
+        type: 'Type',
+        description: 'Description',
+        amount: 'Amount',
+        status: 'Status',
+        date: 'Date',
+        empty: 'No transactions',
+      };
 
   const { data: myTx = [] } = useQuery({
     queryKey: ['all-transactions', user?.id],
@@ -26,16 +47,16 @@ const TransactionsPage = () => {
   return (
     <AppLayout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">Transaction History</h1>
+        <h1 className="text-2xl font-bold text-foreground">{text.title}</h1>
         <div className="bg-card rounded-xl border border-border overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Type</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Description</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Amount</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Date</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.type}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.description}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.amount}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.status}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.date}</th>
               </tr>
             </thead>
             <tbody>
@@ -54,7 +75,7 @@ const TransactionsPage = () => {
                   <td className="p-4 text-sm text-muted-foreground">{format(new Date(t.created_at), 'MMM dd, yyyy')}</td>
                 </motion.tr>
               ))}
-              {myTx.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">No transactions</td></tr>}
+              {myTx.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">{text.empty}</td></tr>}
             </tbody>
           </table>
         </div>

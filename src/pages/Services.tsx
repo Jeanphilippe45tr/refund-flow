@@ -79,7 +79,7 @@ const Services = () => {
           <Link to="/refund-policy" className="hover:text-foreground transition-colors">{t('footer.refundPolicy')}</Link>
           <Link to="/cookies" className="hover:text-foreground transition-colors">{t('footer.cookies')}</Link>
         </div>
-        © {new Date().getFullYear()} RefundPayPro. {t('footer.rights')}
+        © 2015 RefundPayPro. {t('footer.rights')}
       </footer>
     </div>
   );

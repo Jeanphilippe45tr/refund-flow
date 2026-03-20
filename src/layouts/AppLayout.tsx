@@ -15,7 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 export const AppLayout = ({ children }: { children: ReactNode }) => {
   const { user, darkMode, toggleDarkMode } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const isMobile = useIsMobile();
 
   const { data: unreadCount = 0 } = useQuery({
@@ -56,17 +56,17 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-9 w-9">
                         <MoreHorizontal className="h-5 w-5" />
-                        <span className="sr-only">More</span>
+                        <span className="sr-only">{language === 'fr' ? 'Plus' : 'More'}</span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
                       <LanguageCurrencyToggle />
                       <DropdownMenuItem onClick={toggleDarkMode} className="cursor-pointer">
-                        Toggle {darkMode ? 'Light' : 'Dark'} Mode
+                        {language === 'fr' ? `Activer le mode ${darkMode ? 'clair' : 'sombre'}` : `Toggle ${darkMode ? 'Light' : 'Dark'} Mode`}
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link to={notificationsLink} className="w-full">
-                          Notifications {unreadCount > 0 && <Badge className="ml-2 h-5 w-6 text-xs">{unreadCount}</Badge>}
+                          {language === 'fr' ? 'Notifications' : 'Notifications'} {unreadCount > 0 && <Badge className="ml-2 h-5 w-6 text-xs">{unreadCount}</Badge>}
                         </Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>

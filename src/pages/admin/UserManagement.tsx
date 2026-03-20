@@ -11,10 +11,55 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const UserManagement = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? {
+        title: 'Gestion des utilisateurs',
+        search: 'Rechercher des utilisateurs...',
+        user: 'Utilisateur',
+        email: 'Email',
+        balance: 'Solde',
+        actions: 'Actions',
+        addRefund: 'Ajouter un remboursement',
+        editBalance: 'Modifier le solde',
+        balanceUpdated: 'Solde mis à jour',
+        refundAdded: 'Remboursement ajouté',
+        userDeleted: 'Utilisateur supprimé',
+        refundReceived: 'Remboursement reçu',
+        refundReceivedMessage: 'Vous avez reçu un remboursement de',
+        editUserBalance: 'Modifier le solde utilisateur',
+        newBalance: 'Nouveau solde ($)',
+        updateBalance: 'Mettre à jour le solde',
+        addRefundTitle: 'Ajouter un remboursement',
+        amount: 'Montant ($)',
+        note: 'Note',
+      }
+    : {
+        title: 'User Management',
+        search: 'Search users...',
+        user: 'User',
+        email: 'Email',
+        balance: 'Balance',
+        actions: 'Actions',
+        addRefund: 'Add refund',
+        editBalance: 'Edit balance',
+        balanceUpdated: 'Balance updated',
+        refundAdded: 'Refund added',
+        userDeleted: 'User deleted',
+        refundReceived: 'Refund Received',
+        refundReceivedMessage: 'You received a refund of',
+        editUserBalance: 'Edit User Balance',
+        newBalance: 'New Balance ($)',
+        updateBalance: 'Update Balance',
+        addRefundTitle: 'Add Refund',
+        amount: 'Amount ($)',
+        note: 'Note',
+      };
   const [search, setSearch] = useState('');
   const [balanceDialog, setBalanceDialog] = useState<string | null>(null);
   const [refundDialog, setRefundDialog] = useState<string | null>(null);
@@ -46,7 +91,7 @@ const UserManagement = () => {
     await supabase.from('profiles').update({ balance }).eq('user_id', userId);
     await supabase.from('admin_logs').insert({ admin_id: user!.id, action: `Edited balance to $${balance}`, details: { user_id: userId } });
     queryClient.invalidateQueries({ queryKey: ['admin-profiles'] });
-    toast.success('Balance updated');
+    toast.success(text.balanceUpdated);
   };
 
   const addRefund = async (userId: string, amount: number, note: string) => {
@@ -60,12 +105,12 @@ const UserManagement = () => {
       await supabase.from('profiles').update({ balance: Number(profile.balance) + amount }).eq('user_id', userId);
     }
     // Notify user
-    await supabase.from('notifications').insert({ user_id: userId, title: 'Refund Received', message: `You received a refund of $${amount.toFixed(2)}` });
+    await supabase.from('notifications').insert({ user_id: userId, title: text.refundReceived, message: `${text.refundReceivedMessage} $${amount.toFixed(2)}` });
     // Log
     await supabase.from('admin_logs').insert({ admin_id: user!.id, action: `Added refund of $${amount} to user`, details: { user_id: userId, note } });
     queryClient.invalidateQueries({ queryKey: ['admin-profiles'] });
     queryClient.invalidateQueries({ queryKey: ['admin-refunds'] });
-    toast.success('Refund added');
+    toast.success(text.refundAdded);
   };
 
   const deleteUser = async (userId: string) => {
@@ -75,27 +120,27 @@ const UserManagement = () => {
     await supabase.from('profiles').delete().eq('user_id', userId);
     await supabase.from('admin_logs').insert({ admin_id: user!.id, action: 'Deleted user', details: { user_id: userId } });
     queryClient.invalidateQueries({ queryKey: ['admin-profiles'] });
-    toast.success('User deleted');
+    toast.success(text.userDeleted);
   };
 
   return (
     <AppLayout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">User Management</h1>
+        <h1 className="text-2xl font-bold text-foreground">{text.title}</h1>
         <div className="flex items-center gap-3">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input placeholder="Search users..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
+            <Input placeholder={text.search} value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
           </div>
         </div>
         <div className="bg-card rounded-xl border border-border overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">User</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Email</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Balance</th>
-                <th className="text-left p-4 text-sm font-medium text-muted-foreground">Actions</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.user}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.email}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.balance}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.actions}</th>
               </tr>
             </thead>
             <tbody>
@@ -111,10 +156,10 @@ const UserManagement = () => {
                   <td className="p-4 font-semibold text-foreground">${Number(u.balance).toFixed(2)}</td>
                   <td className="p-4">
                     <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="sm" onClick={() => { setRefundDialog(u.user_id); setRefundAmount(''); setRefundNote(''); }} title="Add refund">
+                      <Button variant="ghost" size="sm" onClick={() => { setRefundDialog(u.user_id); setRefundAmount(''); setRefundNote(''); }} title={text.addRefund}>
                         <RefreshCw className="w-4 h-4 text-success" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => { setBalanceDialog(u.user_id); setNewBalance(String(u.balance)); }} title="Edit balance">
+                      <Button variant="ghost" size="sm" onClick={() => { setBalanceDialog(u.user_id); setNewBalance(String(u.balance)); }} title={text.editBalance}>
                         <DollarSign className="w-4 h-4" />
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => deleteUser(u.user_id)}>
@@ -130,21 +175,21 @@ const UserManagement = () => {
 
         <Dialog open={!!balanceDialog} onOpenChange={() => setBalanceDialog(null)}>
           <DialogContent>
-            <DialogHeader><DialogTitle>Edit User Balance</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{text.editUserBalance}</DialogTitle></DialogHeader>
             <div className="space-y-4 mt-4">
-              <div><Label>New Balance ($)</Label><Input type="number" value={newBalance} onChange={e => setNewBalance(e.target.value)} className="mt-1" /></div>
-              <Button onClick={() => { editBalance(balanceDialog!, parseFloat(newBalance)); setBalanceDialog(null); }} className="w-full gradient-primary border-0 text-primary-foreground">Update Balance</Button>
+              <div><Label>{text.newBalance}</Label><Input type="number" value={newBalance} onChange={e => setNewBalance(e.target.value)} className="mt-1" /></div>
+              <Button onClick={() => { editBalance(balanceDialog!, parseFloat(newBalance)); setBalanceDialog(null); }} className="w-full gradient-primary border-0 text-primary-foreground">{text.updateBalance}</Button>
             </div>
           </DialogContent>
         </Dialog>
 
         <Dialog open={!!refundDialog} onOpenChange={() => setRefundDialog(null)}>
           <DialogContent>
-            <DialogHeader><DialogTitle>Add Refund</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{text.addRefundTitle}</DialogTitle></DialogHeader>
             <div className="space-y-4 mt-4">
-              <div><Label>Amount ($)</Label><Input type="number" value={refundAmount} onChange={e => setRefundAmount(e.target.value)} className="mt-1" /></div>
-              <div><Label>Note</Label><Textarea value={refundNote} onChange={e => setRefundNote(e.target.value)} className="mt-1" /></div>
-              <Button onClick={() => { addRefund(refundDialog!, parseFloat(refundAmount), refundNote); setRefundDialog(null); }} className="w-full gradient-primary border-0 text-primary-foreground">Add Refund</Button>
+              <div><Label>{text.amount}</Label><Input type="number" value={refundAmount} onChange={e => setRefundAmount(e.target.value)} className="mt-1" /></div>
+              <div><Label>{text.note}</Label><Textarea value={refundNote} onChange={e => setRefundNote(e.target.value)} className="mt-1" /></div>
+              <Button onClick={() => { addRefund(refundDialog!, parseFloat(refundAmount), refundNote); setRefundDialog(null); }} className="w-full gradient-primary border-0 text-primary-foreground">{text.addRefundTitle}</Button>
             </div>
           </DialogContent>
         </Dialog>

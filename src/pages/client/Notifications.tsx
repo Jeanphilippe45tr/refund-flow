@@ -5,10 +5,15 @@ import { Bell, CheckCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const NotificationsPage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? { title: 'Notifications', empty: 'Aucune notification' }
+    : { title: 'Notifications', empty: 'No notifications' };
 
   const { data: myNotifs = [] } = useQuery({
     queryKey: ['notifications', user?.id],
@@ -32,7 +37,7 @@ const NotificationsPage = () => {
   return (
     <AppLayout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">Notifications</h1>
+        <h1 className="text-2xl font-bold text-foreground">{text.title}</h1>
         <div className="bg-card rounded-xl border border-border divide-y divide-border">
           {myNotifs.map((n: any, i: number) => (
             <motion.div key={n.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }}
@@ -49,7 +54,7 @@ const NotificationsPage = () => {
               {n.read && <CheckCheck className="w-4 h-4 text-success mt-1" />}
             </motion.div>
           ))}
-          {myNotifs.length === 0 && <p className="p-8 text-center text-muted-foreground">No notifications</p>}
+          {myNotifs.length === 0 && <p className="p-8 text-center text-muted-foreground">{text.empty}</p>}
         </div>
       </div>
     </AppLayout>

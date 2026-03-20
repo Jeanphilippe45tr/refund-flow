@@ -12,10 +12,39 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const SupportPage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { language } = useLanguage();
+  const text = language === 'fr'
+    ? {
+        title: 'Support',
+        newTicket: 'Nouveau ticket',
+        createTicket: 'Créer un ticket de support',
+        subject: 'Sujet',
+        issue: 'Décrivez votre problème...',
+        submit: 'Envoyer le ticket',
+        ticketCreated: 'Ticket créé !',
+        replySent: 'Réponse envoyée !',
+        noTickets: 'Aucun ticket',
+        replyPlaceholder: 'Écrire une réponse...',
+        selectTicket: 'Sélectionnez un ticket pour voir la conversation',
+      }
+    : {
+        title: 'Support',
+        newTicket: 'New Ticket',
+        createTicket: 'Create Support Ticket',
+        subject: 'Subject',
+        issue: 'Describe your issue...',
+        submit: 'Submit Ticket',
+        ticketCreated: 'Ticket created!',
+        replySent: 'Reply sent!',
+        noTickets: 'No tickets',
+        replyPlaceholder: 'Type a reply...',
+        selectTicket: 'Select a ticket to view conversation',
+      };
   const [open, setOpen] = useState(false);
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
@@ -63,7 +92,7 @@ const SupportPage = () => {
         is_admin: false,
       });
       queryClient.invalidateQueries({ queryKey: ['my-tickets'] });
-      toast.success('Ticket created!');
+      toast.success(text.ticketCreated);
       setOpen(false);
       setSubject('');
       setMessage('');
@@ -80,7 +109,7 @@ const SupportPage = () => {
     });
     setReply('');
     queryClient.invalidateQueries({ queryKey: ['ticket-messages'] });
-    toast.success('Reply sent!');
+    toast.success(text.replySent);
   };
 
   const activeTicket = myTickets.find((t: any) => t.id === selectedTicket);
@@ -89,17 +118,17 @@ const SupportPage = () => {
     <AppLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-foreground">Support</h1>
+          <h1 className="text-2xl font-bold text-foreground">{text.title}</h1>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="gradient-primary border-0 text-primary-foreground"><Plus className="w-4 h-4 mr-2" /> New Ticket</Button>
+              <Button className="gradient-primary border-0 text-primary-foreground"><Plus className="w-4 h-4 mr-2" /> {text.newTicket}</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>Create Support Ticket</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{text.createTicket}</DialogTitle></DialogHeader>
               <form onSubmit={handleCreate} className="space-y-4 mt-4">
-                <Input placeholder="Subject" value={subject} onChange={e => setSubject(e.target.value)} required />
-                <Textarea placeholder="Describe your issue..." value={message} onChange={e => setMessage(e.target.value)} required rows={4} />
-                <Button type="submit" className="w-full gradient-primary border-0 text-primary-foreground">Submit Ticket</Button>
+                <Input placeholder={text.subject} value={subject} onChange={e => setSubject(e.target.value)} required />
+                <Textarea placeholder={text.issue} value={message} onChange={e => setMessage(e.target.value)} required rows={4} />
+                <Button type="submit" className="w-full gradient-primary border-0 text-primary-foreground">{text.submit}</Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -115,7 +144,7 @@ const SupportPage = () => {
                 <p className="text-xs text-muted-foreground">{format(new Date(t.created_at), 'MMM dd, yyyy')}</p>
               </div>
             ))}
-            {myTickets.length === 0 && <p className="p-6 text-center text-muted-foreground text-sm">No tickets</p>}
+            {myTickets.length === 0 && <p className="p-6 text-center text-muted-foreground text-sm">{text.noTickets}</p>}
           </div>
           <div className="lg:col-span-2 bg-card rounded-xl border border-border flex flex-col min-h-[400px]">
             {activeTicket ? (
@@ -132,12 +161,12 @@ const SupportPage = () => {
                   ))}
                 </div>
                 <div className="p-4 border-t border-border flex gap-2">
-                  <Input placeholder="Type a reply..." value={reply} onChange={e => setReply(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleReply()} />
+                  <Input placeholder={text.replyPlaceholder} value={reply} onChange={e => setReply(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleReply()} />
                   <Button onClick={handleReply} className="gradient-primary border-0 text-primary-foreground"><Send className="w-4 h-4" /></Button>
                 </div>
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">Select a ticket to view conversation</div>
+              <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">{text.selectTicket}</div>
             )}
           </div>
         </div>
