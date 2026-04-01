@@ -20,7 +20,9 @@ const barData = [
 const COLORS = ['hsl(220, 100%, 56%)', 'hsl(45, 100%, 61%)', 'hsl(152, 69%, 45%)', 'hsl(0, 84%, 60%)'];
 
 const AdminDashboard = () => {
+  const { user } = useAuth();
   const { language } = useLanguage();
+  const isSuperAdmin = user?.role === 'super_admin';
   const text = language === 'fr'
     ? {
         approved: 'Approuvés',
