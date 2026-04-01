@@ -35,14 +35,18 @@ import AdminSupport from "./pages/admin/AdminSupport";
 import Analytics from "./pages/admin/Analytics";
 import ActivityLog from "./pages/admin/ActivityLog";
 import NotFound from "./pages/NotFound";
-
+import AdminManagement from "./pages/admin/AdminManagement";
+import ChangePassword from "./pages/admin/ChangePassword";
 const queryClient = new QueryClient();
+
+const isAdminRole = (role: string) => role === 'admin' || role === 'super_admin';
 
 const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: 'admin' | 'client' }) => {
   const { user, loading } = useAuth();
   if (loading) return <DashboardSkeleton />;
   if (!user) return <Navigate to="/login" replace />;
-  if (role && user.role !== role) return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />;
+  if (role === 'admin' && !isAdminRole(user.role)) return <Navigate to="/dashboard" replace />;
+  if (role === 'client' && isAdminRole(user.role)) return <Navigate to="/admin" replace />;
   return <>{children}</>;
 };
 
@@ -53,7 +57,7 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Home />} />
+      <Route path="/" element={user ? <Navigate to={isAdminRole(user.role) ? '/admin' : '/dashboard'} replace /> : <Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/services" element={<Services />} />
       <Route path="/contact" element={<Contact />} />
@@ -62,7 +66,7 @@ const AppRoutes = () => {
       <Route path="/refund-policy" element={<RefundPolicyPage />} />
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/cookies" element={<CookiePolicy />} />
-      <Route path="/login" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Login />} />
+      <Route path="/login" element={user ? <Navigate to={isAdminRole(user.role) ? '/admin' : '/dashboard'} replace /> : <Login />} />
       <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
 
       {/* Client */}
@@ -85,6 +89,8 @@ const AppRoutes = () => {
       <Route path="/admin/analytics" element={<ProtectedRoute role="admin"><Analytics /></ProtectedRoute>} />
       <Route path="/admin/logs" element={<ProtectedRoute role="admin"><ActivityLog /></ProtectedRoute>} />
       <Route path="/admin/notifications" element={<ProtectedRoute role="admin"><NotificationsPage /></ProtectedRoute>} />
+      <Route path="/admin/manage-admins" element={<ProtectedRoute role="admin"><AdminManagement /></ProtectedRoute>} />
+      <Route path="/admin/change-password" element={<ProtectedRoute role="admin"><ChangePassword /></ProtectedRoute>} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

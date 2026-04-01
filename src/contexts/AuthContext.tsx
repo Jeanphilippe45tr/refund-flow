@@ -8,7 +8,7 @@ export interface AppUser {
   email: string;
   balance: number;
   profilePhoto: string;
-  role: 'admin' | 'client';
+  role: 'admin' | 'client' | 'super_admin';
   createdAt: string;
   suspended: boolean;
   phone?: string;
@@ -56,7 +56,7 @@ async function fetchAppUser(supabaseUser: SupabaseUser): Promise<AppUser | null>
     email: profile.email,
     balance: Number(profile.balance),
     profilePhoto: profile.profile_photo || '',
-    role: (roleData?.role as 'admin' | 'client') || 'client',
+    role: (roleData?.role as 'admin' | 'client' | 'super_admin') || 'client',
     createdAt: profile.created_at,
     suspended: false,
     phone: profile.phone || undefined,

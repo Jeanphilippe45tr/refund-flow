@@ -1,6 +1,7 @@
 import {
   LayoutDashboard, Wallet, ArrowDownCircle, History, User, LifeBuoy, Bell,
   Users, CreditCard, RefreshCw, BarChart3, Shield, LogOut, Zap, FileCheck, FileText,
+  UserPlus, Lock,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation } from 'react-router-dom';
@@ -16,7 +17,7 @@ export function AppSidebar() {
   const collapsed = state === 'collapsed';
   const location = useLocation();
   const { user, logout } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const clientItems = [
     { title: t('sidebar.dashboard'), url: '/dashboard', icon: LayoutDashboard },
@@ -39,9 +40,12 @@ export function AppSidebar() {
     { title: t('sidebar.analytics'), url: '/admin/analytics', icon: BarChart3 },
     { title: t('sidebar.activityLog'), url: '/admin/logs', icon: Shield },
     { title: t('sidebar.notifications'), url: '/admin/notifications', icon: Bell },
+    ...(user?.role === 'super_admin' ? [{ title: language === 'fr' ? 'Gérer les admins' : 'Manage Admins', url: '/admin/manage-admins', icon: UserPlus }] : []),
+    { title: language === 'fr' ? 'Mot de passe' : 'Change Password', url: '/admin/change-password', icon: Lock },
   ];
 
-  const items = user?.role === 'admin' ? adminItems : clientItems;
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
+  const items = isAdmin ? adminItems : clientItems;
 
   return (
     <Sidebar collapsible="offcanvas">
@@ -53,7 +57,7 @@ export function AppSidebar() {
           </div>
         </div>
         <SidebarGroup>
-          <SidebarGroupLabel>{user?.role === 'admin' ? t('sidebar.administration') : t('sidebar.menu')}</SidebarGroupLabel>
+          <SidebarGroupLabel>{isAdmin ? t('sidebar.administration') : t('sidebar.menu')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
