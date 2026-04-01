@@ -8,7 +8,7 @@ export interface AppUser {
   email: string;
   balance: number;
   profilePhoto: string;
-  role: 'admin' | 'client';
+  role: 'admin' | 'client' | 'super_admin';
   createdAt: string;
   suspended: boolean;
   phone?: string;
