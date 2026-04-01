@@ -44,7 +44,8 @@ export function AppSidebar() {
     { title: language === 'fr' ? 'Mot de passe' : 'Change Password', url: '/admin/change-password', icon: Lock },
   ];
 
-  const items = user?.role === 'admin' ? adminItems : clientItems;
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
+  const items = isAdmin ? adminItems : clientItems;
 
   return (
     <Sidebar collapsible="offcanvas">
