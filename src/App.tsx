@@ -35,7 +35,8 @@ import AdminSupport from "./pages/admin/AdminSupport";
 import Analytics from "./pages/admin/Analytics";
 import ActivityLog from "./pages/admin/ActivityLog";
 import NotFound from "./pages/NotFound";
-
+import AdminManagement from "./pages/admin/AdminManagement";
+import ChangePassword from "./pages/admin/ChangePassword";
 const queryClient = new QueryClient();
 
 const isAdminRole = (role: string) => role === 'admin' || role === 'super_admin';
