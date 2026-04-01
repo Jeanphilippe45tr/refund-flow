@@ -5,9 +5,12 @@ import { RefreshCw } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 const RefundManagement = () => {
+  const { user } = useAuth();
   const { language } = useLanguage();
+  const isSuperAdmin = user?.role === 'super_admin';
   const text = language === 'fr'
     ? {
         unknown: 'Inconnu',
@@ -30,9 +33,11 @@ const RefundManagement = () => {
         empty: 'No refunds yet',
       };
   const { data: refunds = [] } = useQuery({
-    queryKey: ['admin-refunds'],
+    queryKey: ['admin-refunds', isSuperAdmin, user?.id],
     queryFn: async () => {
-      const { data } = await supabase.from('refunds').select('*').order('created_at', { ascending: false });
+      let query = supabase.from('refunds').select('*').order('created_at', { ascending: false });
+      if (!isSuperAdmin) query = query.eq('admin_id', user!.id);
+      const { data } = await query;
       return data || [];
     },
   });
