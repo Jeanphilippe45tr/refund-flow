@@ -45,7 +45,7 @@ const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: 
   if (loading) return <DashboardSkeleton />;
   if (!user) return <Navigate to="/login" replace />;
   if (role === 'admin' && !isAdminRole(user.role)) return <Navigate to="/dashboard" replace />;
-  if (role === 'client' && user.role === 'client' ? false : role === 'client' && isAdminRole(user.role)) return <Navigate to="/admin" replace />;
+  if (role === 'client' && isAdminRole(user.role)) return <Navigate to="/admin" replace />;
   return <>{children}</>;
 };
 
