@@ -40,6 +40,8 @@ export function AppSidebar() {
     { title: t('sidebar.analytics'), url: '/admin/analytics', icon: BarChart3 },
     { title: t('sidebar.activityLog'), url: '/admin/logs', icon: Shield },
     { title: t('sidebar.notifications'), url: '/admin/notifications', icon: Bell },
+    ...(user?.role === 'super_admin' ? [{ title: language === 'fr' ? 'Gérer les admins' : 'Manage Admins', url: '/admin/manage-admins', icon: UserPlus }] : []),
+    { title: language === 'fr' ? 'Mot de passe' : 'Change Password', url: '/admin/change-password', icon: Lock },
   ];
 
   const items = user?.role === 'admin' ? adminItems : clientItems;
