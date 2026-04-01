@@ -17,7 +17,7 @@ export function AppSidebar() {
   const collapsed = state === 'collapsed';
   const location = useLocation();
   const { user, logout } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const clientItems = [
     { title: t('sidebar.dashboard'), url: '/dashboard', icon: LayoutDashboard },
