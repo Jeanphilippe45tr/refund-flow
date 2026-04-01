@@ -38,11 +38,14 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const isAdminRole = (role: string) => role === 'admin' || role === 'super_admin';
+
 const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: 'admin' | 'client' }) => {
   const { user, loading } = useAuth();
   if (loading) return <DashboardSkeleton />;
   if (!user) return <Navigate to="/login" replace />;
-  if (role && user.role !== role) return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />;
+  if (role === 'admin' && !isAdminRole(user.role)) return <Navigate to="/dashboard" replace />;
+  if (role === 'client' && user.role === 'client' ? false : role === 'client' && isAdminRole(user.role)) return <Navigate to="/admin" replace />;
   return <>{children}</>;
 };
 

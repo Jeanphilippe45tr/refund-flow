@@ -56,7 +56,7 @@ async function fetchAppUser(supabaseUser: SupabaseUser): Promise<AppUser | null>
     email: profile.email,
     balance: Number(profile.balance),
     profilePhoto: profile.profile_photo || '',
-    role: (roleData?.role as 'admin' | 'client') || 'client',
+    role: (roleData?.role as 'admin' | 'client' | 'super_admin') || 'client',
     createdAt: profile.created_at,
     suspended: false,
     phone: profile.phone || undefined,
