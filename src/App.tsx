@@ -57,7 +57,7 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Home />} />
+      <Route path="/" element={user ? <Navigate to={isAdminRole(user.role) ? '/admin' : '/dashboard'} replace /> : <Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/services" element={<Services />} />
       <Route path="/contact" element={<Contact />} />
@@ -66,7 +66,7 @@ const AppRoutes = () => {
       <Route path="/refund-policy" element={<RefundPolicyPage />} />
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/cookies" element={<CookiePolicy />} />
-      <Route path="/login" element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <Login />} />
+      <Route path="/login" element={user ? <Navigate to={isAdminRole(user.role) ? '/admin' : '/dashboard'} replace /> : <Login />} />
       <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
 
       {/* Client */}
