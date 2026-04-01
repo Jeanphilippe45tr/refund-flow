@@ -54,24 +54,37 @@ const AdminDashboard = () => {
         withdrawalStatus: 'Withdrawal Status',
       };
   const { data: profiles = [] } = useQuery({
-    queryKey: ['admin-profiles'],
+    queryKey: ['admin-profiles', isSuperAdmin, user?.id],
     queryFn: async () => {
+      if (!isSuperAdmin) {
+        // Regular admins: only show clients they've refunded
+        const { data: adminRefunds } = await supabase.from('refunds').select('user_id').eq('admin_id', user!.id);
+        const userIds = [...new Set((adminRefunds || []).map((r: any) => r.user_id))];
+        if (userIds.length === 0) return [];
+        const { data } = await supabase.from('profiles').select('*').in('user_id', userIds);
+        return data || [];
+      }
       const { data } = await supabase.from('profiles').select('*');
       return data || [];
     },
   });
 
   const { data: withdrawals = [] } = useQuery({
-    queryKey: ['admin-withdrawals'],
+    queryKey: ['admin-withdrawals', isSuperAdmin, user?.id],
     queryFn: async () => {
+      if (!isSuperAdmin) return []; // Regular admins start with no withdrawal data
       const { data } = await supabase.from('withdraw_requests').select('*');
       return data || [];
     },
   });
 
   const { data: refunds = [] } = useQuery({
-    queryKey: ['admin-refunds'],
+    queryKey: ['admin-refunds', isSuperAdmin, user?.id],
     queryFn: async () => {
+      if (!isSuperAdmin) {
+        const { data } = await supabase.from('refunds').select('*').eq('admin_id', user!.id);
+        return data || [];
+      }
       const { data } = await supabase.from('refunds').select('*');
       return data || [];
     },

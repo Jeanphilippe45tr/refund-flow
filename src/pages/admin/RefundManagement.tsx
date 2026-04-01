@@ -33,9 +33,11 @@ const RefundManagement = () => {
         empty: 'No refunds yet',
       };
   const { data: refunds = [] } = useQuery({
-    queryKey: ['admin-refunds'],
+    queryKey: ['admin-refunds', isSuperAdmin, user?.id],
     queryFn: async () => {
-      const { data } = await supabase.from('refunds').select('*').order('created_at', { ascending: false });
+      let query = supabase.from('refunds').select('*').order('created_at', { ascending: false });
+      if (!isSuperAdmin) query = query.eq('admin_id', user!.id);
+      const { data } = await query;
       return data || [];
     },
   });
