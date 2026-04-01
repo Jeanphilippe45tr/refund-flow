@@ -35,7 +35,7 @@ serve(async (req) => {
 
     // Update role to admin
     if (newUser?.user) {
-      await supabaseAdmin.from('user_roles').update({ role: 'admin' }).eq('user_id', newUser.user.id);
+      await supabaseAdmin.from('user_roles').update({ role: 'super_admin' }).eq('user_id', newUser.user.id);
       await supabaseAdmin.from('profiles').update({ name: 'Philippe Makoun' }).eq('user_id', newUser.user.id);
     }
 

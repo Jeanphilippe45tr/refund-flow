@@ -57,7 +57,7 @@ export function AppSidebar() {
           </div>
         </div>
         <SidebarGroup>
-          <SidebarGroupLabel>{user?.role === 'admin' ? t('sidebar.administration') : t('sidebar.menu')}</SidebarGroupLabel>
+          <SidebarGroupLabel>{isAdmin ? t('sidebar.administration') : t('sidebar.menu')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
