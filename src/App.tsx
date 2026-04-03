@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { DashboardSkeleton } from "@/components/DashboardSkeleton";
+import { useBrowserNotifications } from "@/hooks/useBrowserNotifications";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
