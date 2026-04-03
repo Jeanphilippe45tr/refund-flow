@@ -18,6 +18,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const WithdrawalManagement = () => {
   const { user } = useAuth();
+  const isSuperAdmin = user?.role === 'super_admin';
   const queryClient = useQueryClient();
   const { language } = useLanguage();
   const text = language === 'fr'
@@ -83,10 +84,25 @@ const WithdrawalManagement = () => {
   const [reason, setReason] = useState('');
   const [proof, setProof] = useState('');
 
-  const { data: withdrawals = [] } = useQuery({
-    queryKey: ['admin-withdrawals'],
+  // Get admin's client IDs first
+  const { data: adminClients = [] } = useQuery({
+    queryKey: ['admin-client-ids', isSuperAdmin, user?.id],
     queryFn: async () => {
-      const { data } = await supabase.from('withdraw_requests').select('*').order('created_at', { ascending: false });
+      if (isSuperAdmin) return [];
+      const { data } = await supabase.from('profiles').select('user_id').eq('created_by_admin', user!.id);
+      return data?.map((p: any) => p.user_id) || [];
+    },
+  });
+
+  const { data: withdrawals = [] } = useQuery({
+    queryKey: ['admin-withdrawals', isSuperAdmin, user?.id, adminClients],
+    queryFn: async () => {
+      if (isSuperAdmin) {
+        const { data } = await supabase.from('withdraw_requests').select('*').order('created_at', { ascending: false });
+        return data || [];
+      }
+      if (adminClients.length === 0) return [];
+      const { data } = await supabase.from('withdraw_requests').select('*').in('user_id', adminClients).order('created_at', { ascending: false });
       return data || [];
     },
   });

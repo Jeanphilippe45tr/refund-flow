@@ -38,6 +38,33 @@ export type Database = {
         }
         Relationships: []
       }
+      client_credentials: {
+        Row: {
+          created_at: string
+          created_by_admin: string
+          email: string
+          id: string
+          plain_password: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_admin: string
+          email: string
+          id?: string
+          plain_password: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by_admin?: string
+          email?: string
+          id?: string
+          plain_password?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       document_verifications: {
         Row: {
           admin_notes: string | null
@@ -142,6 +169,7 @@ export type Database = {
           balance: number
           country: string | null
           created_at: string
+          created_by_admin: string | null
           email: string
           id: string
           name: string
@@ -154,6 +182,7 @@ export type Database = {
           balance?: number
           country?: string | null
           created_at?: string
+          created_by_admin?: string | null
           email?: string
           id?: string
           name?: string
@@ -166,6 +195,7 @@ export type Database = {
           balance?: number
           country?: string | null
           created_at?: string
+          created_by_admin?: string | null
           email?: string
           id?: string
           name?: string
