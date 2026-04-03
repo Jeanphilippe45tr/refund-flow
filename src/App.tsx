@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { DashboardSkeleton } from "@/components/DashboardSkeleton";
+import { useBrowserNotifications } from "@/hooks/useBrowserNotifications";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -48,6 +49,11 @@ const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: 
   if (role === 'admin' && !isAdminRole(user.role)) return <Navigate to="/dashboard" replace />;
   if (role === 'client' && isAdminRole(user.role)) return <Navigate to="/admin" replace />;
   return <>{children}</>;
+};
+
+const NotificationListener = () => {
+  useBrowserNotifications();
+  return null;
 };
 
 const AppRoutes = () => {
@@ -106,6 +112,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AuthProvider>
+              <NotificationListener />
               <AppRoutes />
             </AuthProvider>
           </BrowserRouter>
