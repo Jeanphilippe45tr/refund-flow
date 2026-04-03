@@ -43,9 +43,13 @@ const RefundManagement = () => {
   });
 
   const { data: profiles = [] } = useQuery({
-    queryKey: ['admin-profiles'],
+    queryKey: ['admin-profiles', isSuperAdmin, user?.id],
     queryFn: async () => {
-      const { data } = await supabase.from('profiles').select('*');
+      if (isSuperAdmin) {
+        const { data } = await supabase.from('profiles').select('*');
+        return data || [];
+      }
+      const { data } = await supabase.from('profiles').select('*').eq('created_by_admin', user!.id);
       return data || [];
     },
   });
