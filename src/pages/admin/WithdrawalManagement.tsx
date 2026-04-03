@@ -17,6 +17,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const WithdrawalManagement = () => {
+  const isSuperAdmin = user?.role === 'super_admin';
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { language } = useLanguage();
