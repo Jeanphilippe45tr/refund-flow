@@ -50,6 +50,11 @@ const ProtectedRoute = ({ children, role }: { children: React.ReactNode; role?: 
   return <>{children}</>;
 };
 
+const NotificationListener = () => {
+  useBrowserNotifications();
+  return null;
+};
+
 const AppRoutes = () => {
   const { user, loading } = useAuth();
 
