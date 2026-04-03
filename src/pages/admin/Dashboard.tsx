@@ -29,7 +29,7 @@ const AdminDashboard = () => {
         pending: 'En attente',
         rejected: 'Rejetés',
         title: 'Tableau de bord admin',
-        subtitle: 'Vue d’ensemble et analyses de la plateforme',
+        subtitle: 'Vue d\'ensemble et analyses de la plateforme',
         totalUsers: 'Utilisateurs',
         thisMonth: '+3 ce mois',
         platformBalance: 'Solde plateforme',
@@ -52,43 +52,51 @@ const AdminDashboard = () => {
         monthlyOverview: 'Monthly Overview',
         withdrawalStatus: 'Withdrawal Status',
       };
+
+  // Profiles: super admin sees all, admin sees only their created clients
   const { data: profiles = [] } = useQuery({
     queryKey: ['admin-profiles', isSuperAdmin, user?.id],
     queryFn: async () => {
-      if (!isSuperAdmin) {
-        // Regular admins: only show clients they've refunded
-        const { data: adminRefunds } = await supabase.from('refunds').select('user_id').eq('admin_id', user!.id);
-        const userIds = [...new Set((adminRefunds || []).map((r: any) => r.user_id))];
-        if (userIds.length === 0) return [];
-        const { data } = await supabase.from('profiles').select('*').in('user_id', userIds);
+      if (isSuperAdmin) {
+        const { data } = await supabase.from('profiles').select('*');
         return data || [];
       }
-      const { data } = await supabase.from('profiles').select('*');
+      const { data } = await supabase.from('profiles').select('*').eq('created_by_admin', user!.id);
       return data || [];
     },
   });
 
+  // Withdrawals: scope by admin's clients
   const { data: withdrawals = [] } = useQuery({
     queryKey: ['admin-withdrawals', isSuperAdmin, user?.id],
     queryFn: async () => {
-      if (!isSuperAdmin) return []; // Regular admins start with no withdrawal data
-      const { data } = await supabase.from('withdraw_requests').select('*');
+      if (isSuperAdmin) {
+        const { data } = await supabase.from('withdraw_requests').select('*');
+        return data || [];
+      }
+      // Get user IDs of admin's clients
+      const clientIds = profiles.map((p: any) => p.user_id);
+      if (clientIds.length === 0) return [];
+      const { data } = await supabase.from('withdraw_requests').select('*').in('user_id', clientIds);
       return data || [];
     },
+    enabled: isSuperAdmin || profiles.length > 0 || profiles.length === 0,
   });
 
+  // Refunds: admin sees only their refunds
   const { data: refunds = [] } = useQuery({
     queryKey: ['admin-refunds', isSuperAdmin, user?.id],
     queryFn: async () => {
-      if (!isSuperAdmin) {
-        const { data } = await supabase.from('refunds').select('*').eq('admin_id', user!.id);
+      if (isSuperAdmin) {
+        const { data } = await supabase.from('refunds').select('*');
         return data || [];
       }
-      const { data } = await supabase.from('refunds').select('*');
+      const { data } = await supabase.from('refunds').select('*').eq('admin_id', user!.id);
       return data || [];
     },
   });
 
+  const adminClientIds = profiles.map((p: any) => p.user_id);
   const totalBalance = profiles.reduce((s: number, u: any) => s + Number(u.balance), 0);
   const totalRefunds = refunds.reduce((s: number, r: any) => s + Number(r.amount), 0);
   const pendingW = withdrawals.filter((w: any) => w.status === 'pending');
@@ -108,7 +116,7 @@ const AdminDashboard = () => {
           <p className="text-muted-foreground">{text.subtitle}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <StatCard title={text.totalUsers} value={String(profiles.length)} icon={<Users className="w-5 h-5 text-primary" />} change={text.thisMonth} positive />
+          <StatCard title={text.totalUsers} value={String(profiles.filter((p: any) => !['admin', 'super_admin'].includes(p.role)).length || profiles.length)} icon={<Users className="w-5 h-5 text-primary" />} change={text.thisMonth} positive />
           <StatCard title={text.platformBalance} value={`$${totalBalance.toFixed(2)}`} icon={<Wallet className="w-5 h-5 text-primary" />} gradient />
           <StatCard title={text.totalRefunds} value={`$${totalRefunds.toFixed(2)}`} icon={<RefreshCw className="w-5 h-5 text-success" />} />
           <StatCard title={text.totalWithdrawn} value={`$${totalW.toFixed(2)}`} icon={<CreditCard className="w-5 h-5 text-warning" />} />
