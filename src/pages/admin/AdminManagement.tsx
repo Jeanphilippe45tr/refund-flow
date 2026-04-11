@@ -38,7 +38,6 @@ const AdminManagement = () => {
         superAdmin: 'Super Admin',
         admin: 'Admin',
         confirmDelete: 'Êtes-vous sûr de vouloir supprimer cet administrateur ?',
-        password: 'Mot de passe',
         show: 'Afficher',
         hide: 'Masquer',
       }
