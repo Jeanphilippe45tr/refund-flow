@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { motion } from 'framer-motion';
-import { UserPlus, Trash2, ShieldCheck } from 'lucide-react';
+import { UserPlus, Trash2, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,6 +21,7 @@ const AdminManagement = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>({});
 
   const text = language === 'fr'
     ? {
@@ -37,6 +38,8 @@ const AdminManagement = () => {
         superAdmin: 'Super Admin',
         admin: 'Admin',
         confirmDelete: 'Êtes-vous sûr de vouloir supprimer cet administrateur ?',
+        show: 'Afficher',
+        hide: 'Masquer',
       }
     : {
         title: 'Admin Management',
@@ -52,6 +55,8 @@ const AdminManagement = () => {
         superAdmin: 'Super Admin',
         admin: 'Admin',
         confirmDelete: 'Are you sure you want to delete this administrator?',
+        show: 'Show',
+        hide: 'Hide',
       };
 
   const { data: adminRoles = [] } = useQuery({
@@ -69,6 +74,17 @@ const AdminManagement = () => {
       return data || [];
     },
   });
+
+  // Fetch credentials for password visibility
+  const { data: credentials = [] } = useQuery({
+    queryKey: ['admin-credentials'],
+    queryFn: async () => {
+      const { data } = await supabase.from('client_credentials').select('*');
+      return data || [];
+    },
+  });
+
+  const getCredential = (userId: string) => credentials.find((c: any) => c.user_id === userId);
 
   const admins = adminRoles.map((r: any) => {
     const profile = profiles.find((p: any) => p.user_id === r.user_id);
@@ -141,6 +157,7 @@ const AdminManagement = () => {
               <tr className="border-b border-border">
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.name}</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.email}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.password}</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.role}</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.actions}</th>
               </tr>
@@ -157,6 +174,22 @@ const AdminManagement = () => {
                     </div>
                   </td>
                   <td className="p-4 text-sm text-muted-foreground">{a.email}</td>
+                  <td className="p-4 text-sm text-muted-foreground">
+                    {(() => {
+                      const cred = getCredential(a.user_id);
+                      if (!cred) return '—';
+                      return (
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs">
+                            {showPasswords[a.user_id] ? cred.plain_password : '••••••••'}
+                          </span>
+                          <Button variant="ghost" size="sm" onClick={() => setShowPasswords(p => ({ ...p, [a.user_id]: !p[a.user_id] }))}>
+                            {showPasswords[a.user_id] ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                          </Button>
+                        </div>
+                      );
+                    })()}
+                  </td>
                   <td className="p-4">
                     <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${a.role === 'super_admin' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300' : 'bg-primary/10 text-primary'}`}>
                       <ShieldCheck className="w-3 h-3" />
