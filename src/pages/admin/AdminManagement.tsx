@@ -38,6 +38,9 @@ const AdminManagement = () => {
         superAdmin: 'Super Admin',
         admin: 'Admin',
         confirmDelete: 'Êtes-vous sûr de vouloir supprimer cet administrateur ?',
+        password: 'Mot de passe',
+        show: 'Afficher',
+        hide: 'Masquer',
       }
     : {
         title: 'Admin Management',
@@ -53,6 +56,8 @@ const AdminManagement = () => {
         superAdmin: 'Super Admin',
         admin: 'Admin',
         confirmDelete: 'Are you sure you want to delete this administrator?',
+        show: 'Show',
+        hide: 'Hide',
       };
 
   const { data: adminRoles = [] } = useQuery({
