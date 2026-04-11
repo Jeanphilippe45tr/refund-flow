@@ -157,6 +157,7 @@ const AdminManagement = () => {
               <tr className="border-b border-border">
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.name}</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.email}</th>
+                <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.password}</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.role}</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">{text.actions}</th>
               </tr>
