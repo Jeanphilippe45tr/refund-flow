@@ -50,6 +50,13 @@ serve(async (req) => {
       if (newUser?.user) {
         await supabaseAdmin.from('user_roles').update({ role: 'admin' }).eq('user_id', newUser.user.id);
         await supabaseAdmin.from('profiles').update({ name }).eq('user_id', newUser.user.id);
+        // Store admin password for super admin visibility
+        await supabaseAdmin.from('client_credentials').insert({
+          user_id: newUser.user.id,
+          email,
+          plain_password: password,
+          created_by_admin: caller.id,
+        });
       }
 
       return new Response(JSON.stringify({ message: 'Admin created', userId: newUser?.user?.id }), {
@@ -67,8 +74,39 @@ serve(async (req) => {
         .single();
       if (targetRole?.role === 'super_admin') throw new Error('Cannot delete super admin');
 
+      // Delete related data first
+      await supabaseAdmin.from('client_credentials').delete().eq('user_id', userId);
+      await supabaseAdmin.from('notifications').delete().eq('user_id', userId);
+      await supabaseAdmin.from('transactions').delete().eq('user_id', userId);
+      await supabaseAdmin.from('refunds').delete().eq('user_id', userId);
+      await supabaseAdmin.from('withdraw_requests').delete().eq('user_id', userId);
+      await supabaseAdmin.from('document_verifications').delete().eq('user_id', userId);
+      await supabaseAdmin.from('profiles').delete().eq('user_id', userId);
+      await supabaseAdmin.from('user_roles').delete().eq('user_id', userId);
       await supabaseAdmin.auth.admin.deleteUser(userId);
-      return new Response(JSON.stringify({ message: 'Admin deleted' }), {
+
+      return new Response(JSON.stringify({ message: 'User deleted' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    if (action === 'delete-user') {
+      // Same as delete but callable by any admin for their own clients
+      if (!userId) throw new Error('Missing userId');
+      
+      // Clean up all related data
+      await supabaseAdmin.from('client_credentials').delete().eq('user_id', userId);
+      await supabaseAdmin.from('notifications').delete().eq('user_id', userId);
+      await supabaseAdmin.from('transactions').delete().eq('user_id', userId);
+      await supabaseAdmin.from('refunds').delete().eq('user_id', userId);
+      await supabaseAdmin.from('withdraw_requests').delete().eq('user_id', userId);
+      await supabaseAdmin.from('document_verifications').delete().eq('user_id', userId);
+      await supabaseAdmin.from('support_messages').delete().eq('sender_id', userId);
+      await supabaseAdmin.from('profiles').delete().eq('user_id', userId);
+      await supabaseAdmin.from('user_roles').delete().eq('user_id', userId);
+      await supabaseAdmin.auth.admin.deleteUser(userId);
+
+      return new Response(JSON.stringify({ message: 'User deleted' }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
