@@ -21,6 +21,7 @@ const AdminManagement = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>({});
 
   const text = language === 'fr'
     ? {
