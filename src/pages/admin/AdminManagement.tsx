@@ -174,6 +174,22 @@ const AdminManagement = () => {
                     </div>
                   </td>
                   <td className="p-4 text-sm text-muted-foreground">{a.email}</td>
+                  <td className="p-4 text-sm text-muted-foreground">
+                    {(() => {
+                      const cred = getCredential(a.user_id);
+                      if (!cred) return '—';
+                      return (
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs">
+                            {showPasswords[a.user_id] ? cred.plain_password : '••••••••'}
+                          </span>
+                          <Button variant="ghost" size="sm" onClick={() => setShowPasswords(p => ({ ...p, [a.user_id]: !p[a.user_id] }))}>
+                            {showPasswords[a.user_id] ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                          </Button>
+                        </div>
+                      );
+                    })()}
+                  </td>
                   <td className="p-4">
                     <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${a.role === 'super_admin' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300' : 'bg-primary/10 text-primary'}`}>
                       <ShieldCheck className="w-3 h-3" />
