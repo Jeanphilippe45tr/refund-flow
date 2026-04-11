@@ -75,6 +75,17 @@ const AdminManagement = () => {
     },
   });
 
+  // Fetch credentials for password visibility
+  const { data: credentials = [] } = useQuery({
+    queryKey: ['admin-credentials'],
+    queryFn: async () => {
+      const { data } = await supabase.from('client_credentials').select('*');
+      return data || [];
+    },
+  });
+
+  const getCredential = (userId: string) => credentials.find((c: any) => c.user_id === userId);
+
   const admins = adminRoles.map((r: any) => {
     const profile = profiles.find((p: any) => p.user_id === r.user_id);
     return { ...r, name: profile?.name || '', email: profile?.email || '' };
