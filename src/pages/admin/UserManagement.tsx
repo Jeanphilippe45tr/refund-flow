@@ -186,10 +186,21 @@ const UserManagement = () => {
   };
 
   const deleteUser = async (userId: string) => {
-    await supabase.from('profiles').delete().eq('user_id', userId);
-    await supabase.from('admin_logs').insert({ admin_id: user!.id, action: 'Deleted user', details: { user_id: userId } });
-    queryClient.invalidateQueries({ queryKey: ['admin-profiles'] });
-    toast.success(text.userDeleted);
+    if (!confirm(language === 'fr' ? 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?' : 'Are you sure you want to delete this user?')) return;
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      const res = await supabase.functions.invoke('manage-admin', {
+        body: { action: 'delete-user', userId },
+        headers: { Authorization: `Bearer ${session.session?.access_token}` },
+      });
+      if (res.error) throw new Error(res.error.message);
+      if (res.data?.error) throw new Error(res.data.error);
+      queryClient.invalidateQueries({ queryKey: ['admin-profiles'] });
+      queryClient.invalidateQueries({ queryKey: ['client-credentials'] });
+      toast.success(text.userDeleted);
+    } catch (err: any) {
+      toast.error(err.message || 'Error deleting user');
+    }
   };
 
   return (
