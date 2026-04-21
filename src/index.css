@@ -134,7 +134,27 @@
     box-shadow: var(--shadow-md);
   }
   .glass-card {
-    @apply bg-card/80 backdrop-blur-xl border border-border/50 rounded-xl;
+    @apply bg-card/70 backdrop-blur-xl border border-border/60 rounded-xl;
+    box-shadow: 0 8px 32px hsl(var(--primary) / 0.06);
+  }
+  .premium-card {
+    @apply relative bg-card rounded-2xl border border-border/70 transition-all duration-300;
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.04), 0 8px 24px hsl(var(--primary) / 0.06);
+  }
+  .premium-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px hsl(var(--foreground) / 0.06), 0 16px 40px hsl(var(--primary) / 0.12);
+    border-color: hsl(var(--primary) / 0.3);
+  }
+  .skeleton-shimmer {
+    @apply relative overflow-hidden bg-muted rounded-md;
+  }
+  .skeleton-shimmer::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent, hsl(var(--card) / 0.6), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite linear;
   }
 }
 
@@ -146,5 +166,35 @@
   .text-gradient-accent {
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-accent);
+  }
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-gold);
+  }
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, hsl(var(--foreground) / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--foreground) / 0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .dark .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, hsl(var(--foreground) / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--foreground) / 0.08) 1px, transparent 1px);
+  }
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+  .hover-glow {
+    @apply transition-shadow duration-300;
+  }
+  .hover-glow:hover {
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.35);
+  }
+  .animated-gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--primary)));
+    background-size: 200% auto;
+    animation: shimmer 4s linear infinite;
   }
 }
