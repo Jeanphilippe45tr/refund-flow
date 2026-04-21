@@ -38,6 +38,9 @@ import ActivityLog from "./pages/admin/ActivityLog";
 import NotFound from "./pages/NotFound";
 import AdminManagement from "./pages/admin/AdminManagement";
 import ChangePassword from "./pages/admin/ChangePassword";
+import InvoiceManagement from "./pages/admin/InvoiceManagement";
+import AdminProfile from "./pages/admin/AdminProfile";
+import ClientInvoices from "./pages/client/Invoices";
 const queryClient = new QueryClient();
 
 const isAdminRole = (role: string) => role === 'admin' || role === 'super_admin';
@@ -84,6 +87,7 @@ const AppRoutes = () => {
       <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
       <Route path="/notifications" element={<ProtectedRoute role="client"><NotificationsPage /></ProtectedRoute>} />
       <Route path="/support" element={<ProtectedRoute role="client"><SupportPage /></ProtectedRoute>} />
+      <Route path="/invoices" element={<ProtectedRoute role="client"><ClientInvoices /></ProtectedRoute>} />
 
       {/* Admin */}
       <Route path="/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
@@ -97,6 +101,8 @@ const AppRoutes = () => {
       <Route path="/admin/notifications" element={<ProtectedRoute role="admin"><NotificationsPage /></ProtectedRoute>} />
       <Route path="/admin/manage-admins" element={<ProtectedRoute role="admin"><AdminManagement /></ProtectedRoute>} />
       <Route path="/admin/change-password" element={<ProtectedRoute role="admin"><ChangePassword /></ProtectedRoute>} />
+      <Route path="/admin/invoices" element={<ProtectedRoute role="admin"><InvoiceManagement /></ProtectedRoute>} />
+      <Route path="/admin/profile" element={<ProtectedRoute role="admin"><AdminProfile /></ProtectedRoute>} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>
