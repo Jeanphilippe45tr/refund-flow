@@ -96,7 +96,7 @@ const InvoiceManagement = () => {
     const validFees = fees.filter(f => f.label.trim());
     const totalFees = validFees.reduce((s, f) => s + Number(f.amount || 0), 0);
 
-    const { data, error } = await supabase.from('invoices').insert([{
+    const payload: any = {
       user_id: clientId,
       admin_id: user!.id,
       company_name: companyName,
@@ -107,12 +107,13 @@ const InvoiceManagement = () => {
       client_email: client.email,
       client_country: client.country,
       refund_amount: Number(refundAmount || 0),
-      fees: validFees as any,
+      fees: validFees,
       total_fees: totalFees,
       currency,
       notes,
       status: 'paid',
-    }]).select().single();
+    };
+    const { data, error } = await supabase.from('invoices').insert(payload).select().single();
 
     if (error) { toast.error(error.message); return; }
     queryClient.invalidateQueries({ queryKey: ['admin-invoices'] });
