@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, Wallet, ArrowDownCircle, History, User, LifeBuoy, Bell,
   Users, CreditCard, RefreshCw, BarChart3, Shield, LogOut, Zap, FileCheck, FileText,
-  UserPlus, Lock,
+  UserPlus, Lock, Receipt, PenTool,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation } from 'react-router-dom';
@@ -24,6 +24,7 @@ export function AppSidebar() {
     { title: t('sidebar.wallet'), url: '/wallet', icon: Wallet },
     { title: t('sidebar.withdraw'), url: '/withdraw', icon: ArrowDownCircle },
     { title: t('sidebar.documents'), url: '/documents', icon: FileText },
+    { title: language === 'fr' ? 'Mes factures' : 'My Invoices', url: '/invoices', icon: Receipt },
     { title: t('sidebar.transactions'), url: '/transactions', icon: History },
     { title: t('sidebar.notifications'), url: '/notifications', icon: Bell },
     { title: t('sidebar.support'), url: '/support', icon: LifeBuoy },
@@ -35,11 +36,13 @@ export function AppSidebar() {
     { title: t('sidebar.users'), url: '/admin/users', icon: Users },
     { title: t('sidebar.withdrawals'), url: '/admin/withdrawals', icon: CreditCard },
     { title: t('sidebar.refunds'), url: '/admin/refunds', icon: RefreshCw },
+    { title: language === 'fr' ? 'Facturation' : 'Invoices', url: '/admin/invoices', icon: Receipt },
     { title: t('sidebar.documents'), url: '/admin/documents', icon: FileCheck },
     { title: t('sidebar.supportTickets'), url: '/admin/support', icon: LifeBuoy },
     { title: t('sidebar.analytics'), url: '/admin/analytics', icon: BarChart3 },
     { title: t('sidebar.activityLog'), url: '/admin/logs', icon: Shield },
     { title: t('sidebar.notifications'), url: '/admin/notifications', icon: Bell },
+    { title: language === 'fr' ? 'Ma signature' : 'My Signature', url: '/admin/profile', icon: PenTool },
     ...(user?.role === 'super_admin' ? [{ title: language === 'fr' ? 'Gérer les admins' : 'Manage Admins', url: '/admin/manage-admins', icon: UserPlus }] : []),
     { title: language === 'fr' ? 'Mot de passe' : 'Change Password', url: '/admin/change-password', icon: Lock },
   ];
