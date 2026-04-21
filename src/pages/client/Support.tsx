@@ -137,10 +137,15 @@ const SupportPage = () => {
           <div className="bg-card rounded-xl border border-border divide-y divide-border">
             {myTickets.map((t: any) => (
               <div key={t.id} onClick={() => setSelectedTicket(t.id)} className={`p-4 cursor-pointer hover:bg-muted/50 transition-colors ${selectedTicket === t.id ? 'bg-accent' : ''}`}>
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center justify-between mb-1 gap-2">
                   <p className="text-sm font-medium truncate text-foreground">{t.subject}</p>
                   <StatusBadge status={t.status} />
                 </div>
+                {t.created_by_admin && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary uppercase font-medium inline-block mb-1">
+                    {language === 'fr' ? "Reçu de l'admin" : 'From admin'}
+                  </span>
+                )}
                 <p className="text-xs text-muted-foreground">{format(new Date(t.created_at), 'MMM dd, yyyy')}</p>
               </div>
             ))}

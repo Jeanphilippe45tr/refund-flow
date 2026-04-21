@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, Wallet, ArrowDownCircle, History, User, LifeBuoy, Bell,
   Users, CreditCard, RefreshCw, BarChart3, Shield, LogOut, Zap, FileCheck, FileText,
-  UserPlus, Lock,
+  UserPlus, Lock, Receipt, PenTool,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation } from 'react-router-dom';
