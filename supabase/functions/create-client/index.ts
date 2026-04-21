@@ -6,6 +6,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const json = (status: number, body: any) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
@@ -15,15 +21,13 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    // Verify caller is admin
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader) throw new Error('No authorization header');
-    
+    if (!authHeader) return json(401, { error: 'No authorization header' });
+
     const token = authHeader.replace('Bearer ', '');
     const { data: { user: caller } } = await supabaseAdmin.auth.getUser(token);
-    if (!caller) throw new Error('Invalid token');
+    if (!caller) return json(401, { error: 'Invalid token' });
 
-    // Check caller is admin
     const { data: callerRole } = await supabaseAdmin
       .from('user_roles')
       .select('role')
@@ -31,13 +35,28 @@ serve(async (req) => {
       .single();
 
     if (!callerRole || (callerRole.role !== 'admin' && callerRole.role !== 'super_admin')) {
-      throw new Error('Unauthorized: not an admin');
+      return json(403, { error: 'Unauthorized: not an admin' });
     }
 
-    const { name, email, password } = await req.json();
-    if (!name || !email || !password) throw new Error('Missing required fields');
+    const body = await req.json().catch(() => ({}));
+    const name = (body.name || '').trim();
+    const email = (body.email || '').trim().toLowerCase();
+    const password = body.password || '';
 
-    // Create the user
+    if (!name || !email || !password) {
+      return json(400, { error: 'All fields (name, email, password) are required' });
+    }
+
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return json(400, { error: 'Invalid email format. Please use a valid email like name@example.com' });
+    }
+
+    if (password.length < 6) {
+      return json(400, { error: 'Password must be at least 6 characters long' });
+    }
+
     const { data: newUser, error } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
@@ -45,16 +64,17 @@ serve(async (req) => {
       user_metadata: { name },
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error('createUser error:', error);
+      return json(400, { error: error.message || 'Failed to create user' });
+    }
 
     if (newUser?.user) {
-      // Set created_by_admin on profile
       await supabaseAdmin
         .from('profiles')
         .update({ name, created_by_admin: caller.id })
         .eq('user_id', newUser.user.id);
 
-      // Store credentials for super admin visibility
       await supabaseAdmin
         .from('client_credentials')
         .insert({
@@ -64,7 +84,6 @@ serve(async (req) => {
           created_by_admin: caller.id,
         });
 
-      // Create notification for the new client
       await supabaseAdmin
         .from('notifications')
         .insert({
@@ -74,14 +93,9 @@ serve(async (req) => {
         });
     }
 
-    return new Response(
-      JSON.stringify({ message: 'Client created', userId: newUser?.user?.id }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return json(200, { message: 'Client created', userId: newUser?.user?.id });
   } catch (err) {
-    return new Response(
-      JSON.stringify({ error: (err as Error).message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    console.error('Unexpected error:', err);
+    return json(500, { error: (err as Error).message || 'Internal server error' });
   }
 });
