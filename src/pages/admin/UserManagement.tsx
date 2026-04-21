@@ -145,11 +145,12 @@ const UserManagement = () => {
     }
     setCreating(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
       const res = await supabase.functions.invoke('create-client', {
-        body: { name: clientName, email: clientEmail, password: clientPassword },
+        body: { name: clientName.trim(), email: clientEmail.trim().toLowerCase(), password: clientPassword },
       });
-      if (res.error) throw new Error(res.error.message);
+      // Edge function returns structured error in res.data even on non-2xx
+      const errMsg = (res.data as any)?.error || res.error?.message;
+      if (errMsg) throw new Error(errMsg);
       toast.success(text.clientCreated);
       setCreateDialog(false);
       setClientName('');
