@@ -112,7 +112,7 @@ const InvoiceManagement = () => {
       currency,
       notes,
       status: 'paid',
-    }).select().single();
+    }]).select().single();
 
     if (error) { toast.error(error.message); return; }
     queryClient.invalidateQueries({ queryKey: ['admin-invoices'] });
