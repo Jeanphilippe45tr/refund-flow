@@ -38,6 +38,33 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_signatures: {
+        Row: {
+          admin_id: string
+          created_at: string
+          id: string
+          signatory_name: string | null
+          signature_url: string
+          updated_at: string
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string
+          id?: string
+          signatory_name?: string | null
+          signature_url: string
+          updated_at?: string
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string
+          id?: string
+          signatory_name?: string | null
+          signature_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       client_credentials: {
         Row: {
           created_at: string
@@ -99,6 +126,78 @@ export type Database = {
           id?: string
           reviewed_by?: string | null
           status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      invoices: {
+        Row: {
+          admin_id: string
+          client_country: string | null
+          client_email: string
+          client_name: string
+          company_name: string
+          company_website: string | null
+          created_at: string
+          currency: string
+          fees: Json
+          id: string
+          invoice_number: string
+          issued_at: string
+          logo_url: string | null
+          notes: string | null
+          refund_amount: number
+          signatory_name: string | null
+          signature_url: string | null
+          status: string
+          total_fees: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_id: string
+          client_country?: string | null
+          client_email: string
+          client_name: string
+          company_name?: string
+          company_website?: string | null
+          created_at?: string
+          currency?: string
+          fees?: Json
+          id?: string
+          invoice_number: string
+          issued_at?: string
+          logo_url?: string | null
+          notes?: string | null
+          refund_amount?: number
+          signatory_name?: string | null
+          signature_url?: string | null
+          status?: string
+          total_fees?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_id?: string
+          client_country?: string | null
+          client_email?: string
+          client_name?: string
+          company_name?: string
+          company_website?: string | null
+          created_at?: string
+          currency?: string
+          fees?: Json
+          id?: string
+          invoice_number?: string
+          issued_at?: string
+          logo_url?: string | null
+          notes?: string | null
+          refund_amount?: number
+          signatory_name?: string | null
+          signature_url?: string | null
+          status?: string
+          total_fees?: number
           updated_at?: string
           user_id?: string
         }
@@ -273,24 +372,36 @@ export type Database = {
       }
       support_tickets: {
         Row: {
+          assigned_admin_id: string | null
+          category: string
           created_at: string
+          created_by_admin: boolean
           id: string
+          priority: string
           status: string
           subject: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          assigned_admin_id?: string | null
+          category?: string
           created_at?: string
+          created_by_admin?: boolean
           id?: string
+          priority?: string
           status?: string
           subject: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          assigned_admin_id?: string | null
+          category?: string
           created_at?: string
+          created_by_admin?: boolean
           id?: string
+          priority?: string
           status?: string
           subject?: string
           updated_at?: string
