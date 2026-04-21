@@ -96,7 +96,7 @@ const InvoiceManagement = () => {
     const validFees = fees.filter(f => f.label.trim());
     const totalFees = validFees.reduce((s, f) => s + Number(f.amount || 0), 0);
 
-    const { data, error } = await supabase.from('invoices').insert({
+    const { data, error } = await supabase.from('invoices').insert([{
       user_id: clientId,
       admin_id: user!.id,
       company_name: companyName,
