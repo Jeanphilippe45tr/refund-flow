@@ -1,20 +1,22 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Shield, Zap, RefreshCw, CreditCard, Star, CheckCircle, Users, TrendingUp, ChevronDown } from 'lucide-react';
+import { ArrowRight, Shield, Zap, RefreshCw, CreditCard, Star, Users, TrendingUp } from 'lucide-react';
 import heroIllustration from '@/assets/hero-illustration.png';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PublicHeader } from '@/components/PublicHeader';
+import { SpotlightBackground } from '@/components/SpotlightBackground';
+import { AnimatedCounter } from '@/components/AnimatedCounter';
 
 const Home = () => {
   const { t } = useLanguage();
 
   const stats = [
-    { label: t('home.refundsProcessed'), value: '150K+', icon: RefreshCw },
-    { label: t('home.successRate'), value: '99.2%', icon: TrendingUp },
-    { label: t('home.happyClients'), value: '50K+', icon: Users },
-    { label: t('home.countriesServed'), value: '80+', icon: Shield },
+    { label: t('home.refundsProcessed'), num: 150, suffix: 'K+', icon: RefreshCw },
+    { label: t('home.successRate'), num: 99.2, suffix: '%', decimals: 1, icon: TrendingUp },
+    { label: t('home.happyClients'), num: 50, suffix: 'K+', icon: Users },
+    { label: t('home.countriesServed'), num: 80, suffix: '+', icon: Shield },
   ];
 
   const testimonials = [
@@ -30,19 +32,25 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <SpotlightBackground />
       <PublicHeader />
 
       {/* Hero */}
-      <section className="px-6 md:px-12 py-20 md:py-32 max-w-6xl mx-auto text-center">
+      <section className="relative px-6 md:px-12 py-20 md:py-32 max-w-6xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent border border-border mb-6 text-sm font-medium text-accent-foreground">
-            <Zap className="w-4 h-4" /> {t('home.trusted')}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6 text-sm font-medium text-accent-foreground hover-glow"
+          >
+            <Zap className="w-4 h-4 text-primary" /> {t('home.trusted')}
+          </motion.div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 text-foreground">
             {t('home.heroTitle1')}
             <br />
-            <span className="text-gradient">{t('home.heroTitle2')}</span>
+            <span className="animated-gradient-text">{t('home.heroTitle2')}</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">{t('home.heroDesc')}</p>
           <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -56,7 +64,7 @@ const Home = () => {
             </Link>
           </div>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="mt-12">
-            <img src={heroIllustration} alt="RefundPayPro platform illustration" className="max-w-2xl mx-auto w-full" />
+            <img src={heroIllustration} alt="RefundPayPro platform illustration" className="max-w-2xl mx-auto w-full animate-float" />
           </motion.div>
         </motion.div>
       </section>
@@ -89,10 +97,18 @@ const Home = () => {
       <section className="px-6 md:px-12 py-20 max-w-6xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.1 }}
-              className="bg-card border border-border rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ delay: i * 0.1 }}
+              className="premium-card p-6 text-center"
+            >
               <s.icon className="w-8 h-8 text-primary mx-auto mb-3" />
-              <p className="text-3xl font-bold text-foreground">{s.value}</p>
+              <p className="text-3xl font-bold text-foreground">
+                <AnimatedCounter value={s.num} suffix={s.suffix} decimals={s.decimals ?? 0} />
+              </p>
               <p className="text-sm text-muted-foreground mt-1">{s.label}</p>
             </motion.div>
           ))}

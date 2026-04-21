@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Shield, Zap, RefreshCw, CreditCard } from 'lucide-react';
 import { PublicHeader } from '@/components/PublicHeader';
+import { SpotlightBackground } from '@/components/SpotlightBackground';
 
 const Landing = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <SpotlightBackground />
       <PublicHeader showNavLinks={false} />
 
       {/* Hero */}
