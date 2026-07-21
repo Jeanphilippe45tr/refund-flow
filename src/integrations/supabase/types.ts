@@ -265,41 +265,59 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_number: string | null
+          account_type: string | null
           balance: number
+          bank_name: string | null
           country: string | null
           created_at: string
           created_by_admin: string | null
           email: string
+          iban: string | null
           id: string
           name: string
           phone: string | null
           profile_photo: string | null
+          sort_code: string | null
+          swift_bic: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          account_number?: string | null
+          account_type?: string | null
           balance?: number
+          bank_name?: string | null
           country?: string | null
           created_at?: string
           created_by_admin?: string | null
           email?: string
+          iban?: string | null
           id?: string
           name?: string
           phone?: string | null
           profile_photo?: string | null
+          sort_code?: string | null
+          swift_bic?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          account_number?: string | null
+          account_type?: string | null
           balance?: number
+          bank_name?: string | null
           country?: string | null
           created_at?: string
           created_by_admin?: string | null
           email?: string
+          iban?: string | null
           id?: string
           name?: string
           phone?: string | null
           profile_photo?: string | null
+          sort_code?: string | null
+          swift_bic?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -504,6 +522,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      gen_iban: { Args: never; Returns: string }
+      gen_numeric: { Args: { len: number }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
