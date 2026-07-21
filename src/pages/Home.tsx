@@ -67,9 +67,85 @@ const Home = () => {
             </Link>
           </div>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="mt-12">
-            <img src={heroIllustration} alt="RefundPayPro platform illustration" className="max-w-2xl mx-auto w-full animate-float" />
+            <div className="relative max-w-4xl mx-auto">
+              <div className="absolute -inset-4 bg-gradient-to-tr from-primary/30 via-secondary/20 to-primary/30 rounded-3xl blur-2xl opacity-70" />
+              <img src={bankHero} alt="RefundPayPro digital banking dashboard" width={1536} height={1024} className="relative rounded-3xl shadow-2xl w-full animate-float border border-border/50" />
+            </div>
           </motion.div>
         </motion.div>
+      </section>
+
+      {/* Real Bank Section */}
+      <section className="px-6 md:px-12 py-20 bg-gradient-to-b from-background via-primary/5 to-background">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
+                <BadgeCheck className="w-4 h-4" /> {t('home.bankRegulated')}
+              </div>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 text-foreground leading-tight">{t('home.bankTitle')}</h2>
+              <p className="text-muted-foreground text-lg mb-6">{t('home.bankDesc')}</p>
+              <div className="flex flex-wrap gap-3">
+                <Link to="/register"><Button size="lg" className="gradient-primary border-0 text-primary-foreground">{t('home.openAccount')} <ArrowRight className="ml-2 w-4 h-4" /></Button></Link>
+                <Link to="/services"><Button size="lg" variant="outline">{t('home.viewFeatures')}</Button></Link>
+              </div>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative">
+              <img src={bankCardPremium} alt="Premium metal virtual card" width={1280} height={1280} loading="lazy" className="rounded-3xl shadow-2xl w-full" />
+              <div className="absolute -bottom-6 -left-6 bg-card/90 backdrop-blur-md border border-border rounded-2xl p-4 shadow-xl hidden md:block">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center"><Lock className="w-5 h-5 text-primary-foreground" /></div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">3D Secure</p>
+                    <p className="text-sm font-semibold text-foreground">PCI-DSS Level 1</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: Landmark, title: t('home.bankIban'), desc: t('home.bankIbanDesc') },
+              { icon: CreditCard, title: t('home.bankCard'), desc: t('home.bankCardDesc') },
+              { icon: Shield, title: t('home.bankVault'), desc: t('home.bankVaultDesc') },
+              { icon: Globe2, title: t('home.bankFx'), desc: t('home.bankFxDesc') },
+            ].map((f, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                className="premium-card p-6">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <f.icon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-foreground">{f.title}</h3>
+                <p className="text-sm text-muted-foreground">{f.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Split visual */}
+          <div className="grid md:grid-cols-2 gap-6 mt-16">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative rounded-3xl overflow-hidden h-72 group">
+              <img src={bankBranch} alt="Modern bank branch" width={1536} height={1024} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6">
+                <p className="text-xs text-secondary font-semibold uppercase tracking-wider mb-1">{t('home.asFeatured')}</p>
+                <h3 className="text-2xl font-bold text-foreground">{t('home.awardsTitle')}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{t('home.awardsDesc')}</p>
+              </div>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative rounded-3xl overflow-hidden h-72 group">
+              <img src={bankMobile} alt="Mobile banking on the go" width={1280} height={1280} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-secondary/90 flex items-center justify-center"><Smartphone className="w-6 h-6 text-secondary-foreground" /></div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">Mobile Banking</h3>
+                  <p className="text-sm text-muted-foreground">iOS · Android · Web</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
       </section>
 
       {/* How it works */}
