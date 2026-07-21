@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Shield, Zap, RefreshCw, CreditCard, Star, Users, TrendingUp } from 'lucide-react';
-import heroIllustration from '@/assets/hero-illustration.png';
+import { ArrowRight, Shield, Zap, RefreshCw, CreditCard, Star, Users, TrendingUp, Landmark, Wallet, Globe2, Lock, BadgeCheck, Smartphone } from 'lucide-react';
+import bankHero from '@/assets/bank-hero.jpg';
+import bankCardPremium from '@/assets/bank-card-premium.jpg';
+import bankMobile from '@/assets/bank-mobile.jpg';
+import bankBranch from '@/assets/bank-branch.jpg';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PublicHeader } from '@/components/PublicHeader';
