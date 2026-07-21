@@ -3,6 +3,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { AppLayout } from '@/layouts/AppLayout';
 import { StatusBadge } from '@/components/StatusBadge';
+import { BankCard } from '@/components/BankCard';
 import { ArrowUpRight, ArrowDownRight, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
@@ -12,7 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 const WalletPage = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
-  const { formatAmount } = useCurrency();
+  const { formatAmount, symbol } = useCurrency();
 
   const { data: myTx = [] } = useQuery({
     queryKey: ['wallet-transactions', user?.id],
@@ -27,6 +28,19 @@ const WalletPage = () => {
     enabled: !!user,
   });
 
+  const { data: profile } = useQuery({
+    queryKey: ['wallet-profile', user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user!.id)
+        .maybeSingle();
+      return data as any;
+    },
+    enabled: !!user,
+  });
+
   const totalIn = myTx.filter((t: any) => t.type === 'refund').reduce((s: number, t: any) => s + Number(t.amount), 0);
   const totalOut = myTx.filter((t: any) => t.type === 'withdrawal' && t.status === 'completed').reduce((s: number, t: any) => s + Number(t.amount), 0);
 
@@ -34,18 +48,30 @@ const WalletPage = () => {
     <AppLayout>
       <div className="space-y-6">
         <h1 className="text-2xl font-bold text-foreground">{t('wallet.title')}</h1>
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="gradient-primary rounded-2xl p-8 text-primary-foreground">
-          <p className="text-sm opacity-80 mb-1">{t('wallet.availableBalance')}</p>
-          <p className="text-4xl font-bold">{formatAmount(user?.balance || 0)}</p>
-          <div className="flex gap-4 mt-6">
-            <div className="bg-primary-foreground/20 rounded-lg px-4 py-2">
-              <p className="text-xs opacity-80">{t('wallet.totalIn')}</p>
-              <p className="font-semibold">{formatAmount(totalIn)}</p>
-            </div>
-            <div className="bg-primary-foreground/20 rounded-lg px-4 py-2">
-              <p className="text-xs opacity-80">{t('wallet.totalOut')}</p>
-              <p className="font-semibold">{formatAmount(totalOut)}</p>
-            </div>
+
+        <BankCard
+          details={{
+            bank_name: profile?.bank_name,
+            account_number: profile?.account_number,
+            iban: profile?.iban,
+            swift_bic: profile?.swift_bic,
+            sort_code: profile?.sort_code,
+            account_type: profile?.account_type,
+            holder: profile?.name || user?.name,
+            balance: user?.balance || 0,
+            currencySymbol: symbol,
+            formattedBalance: formatAmount(user?.balance || 0),
+          }}
+        />
+
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 gap-4">
+          <div className="bg-card border border-border rounded-xl p-5">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider">{t('wallet.totalIn')}</p>
+            <p className="text-2xl font-bold text-success mt-1">{formatAmount(totalIn)}</p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-5">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider">{t('wallet.totalOut')}</p>
+            <p className="text-2xl font-bold text-foreground mt-1">{formatAmount(totalOut)}</p>
           </div>
         </motion.div>
         <div className="bg-card rounded-xl border border-border">
